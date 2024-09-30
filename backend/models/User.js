@@ -29,8 +29,14 @@ const UserSchema = new Schema({
     },
 });
 
+//Pasword Encryption
+UserSchema.pre('save', async function(next){
+    if(this.isModified('password')){
+        this.password = await bcrypt.hash(this.password, 10);
+    }
+    next();
+});
 
 const User = mongoose.model('user', UserSchema)
 
-// eslint-disable-next-line no-undef
 module.exports = User;

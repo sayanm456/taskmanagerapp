@@ -6,9 +6,12 @@ connectToDB();
 const app = express()
 const port = 3000
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+app.use(express.json())
+
+//Available Routes
+app.use('/api/auth', require('./routes/auth'))
+app.use('/api/tasks', require('./routes/tasks'))
+
 
 app.listen(port, () => {
   console.log(`tasmanager app listening on https://127.0.0.1:${port}`)

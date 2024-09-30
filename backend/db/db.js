@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-undef
 const mongoose = require('mongoose');
 
-const mongoURI = "mongodb+srv://SayanM:ALzOdlmA3HQ6F1Vl@task-manager.bh22q.mongodb.net/"
+const mongoURI = "mongodb+srv://SayanM4455:TBIHP7grwRbHUzup@taskmanager.bh22q.mongodb.net/taskmanagerapp"
 
 const connectToDB = ()=>{
     mongoose.connect(mongoURI)
