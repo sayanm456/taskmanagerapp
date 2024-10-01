@@ -11,14 +11,14 @@ exports.registerUser = async (req, res) => {
         return res.status(400).json({ errors: errors.array()});
     }
 
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
     try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'User already exist' });
         }
 
-        const user = new User({ name, email, password });
+        const user = new User({ name, email, password, role });
         await user.save();
 
         res.status(201).json({message: 'User registered successfully'});

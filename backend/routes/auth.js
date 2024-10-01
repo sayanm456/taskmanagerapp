@@ -9,9 +9,10 @@ const router = express.Router();
 router.post(
   '/register',
   [
-    body('name').not().isEmpty().withMessage('Name is required'),
+    body('name').notEmpty().withMessage('Name is required'),
     body('email').isEmail().withMessage('Valid email is required'),
     body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+    body('role').isIn(['admin', 'user']).notEmpty().withMessage('Role is required'),
   ],
   authController.registerUser
 );
