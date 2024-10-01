@@ -29,23 +29,25 @@ exports.getTasks = async (req, res) => {
   };
 
 
-
-
 // Create a Task (admin or user can assign)
 exports.createTask = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
+    
 
     try {
-        const { title, description, due_date, priority, assigned_user } = req.body;
+        const { title, description, due_date, status, priority, assigned_user } = req.body;
+
+        // if there are any errors, return bad request
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
         const task = new Task({
             title, 
             description,
             due_date,
+            status,
             priority,
-            assigned_user,
+            assigned_user: assigned_user || req.user._id,
             created_by: req.user._id,
         })
         await task.save();
@@ -59,27 +61,29 @@ exports.createTask = async (req, res) => {
 // update a task (by user itself or admin)
 exports.updateTask = async (req, res) => {
     const taskId = req.params.id;
-    const { title, description, due_date, priority, status, assigned_user } = req.body
+    const { title, description, due_date, priority, status, assigned_user, created_by } = req.body
 
     try {
+        const newTask = {};
+        if(title){ newTask.title = title };
+        if(description){ newTask.description = description };
+        if(due_date){ newTask.due_date = due_date };
+        if(priority){ newTask.priority = priority };
+        if(status){ newTask.status = status };
+        if(assigned_user){ newTask.assigned_user = assigned_user };
+        if(created_by){ newTask.created_by = created_by };
+
+
+
         let task = await Task.findById(taskId);
-        if (!task) {
-            return res.status(404).json({ message: 'Task not found' });
-        }
+        if (!task) return res.status(404).json({ message: 'Task not found' });
 
         //Allow only admins or task owners to update
         if (task.created_by.toString() !== req.user._id.toString() && req.user.role!== 'admin') {
             return res.status(403).json({ message: 'Permission denied!' });
-        } 
+        }
 
-        task.title = title || task.title;
-        task.description = description || task.description;
-        task.due_date = due_date || task.due_date;
-        task.priority = priority || task.priority;
-        task.status = status || task.status;
-        task.assigned_user = assigned_user || task.assigned_user;
-
-        await task.save();
+        task = await Task.findByIdAndUpdate(taskId, { $set: newTask}, { new: true })
         res.json({ message: 'Task updated successfully', task });
     } catch (err) {
         res.status(500).json({error: err, message: err.message})

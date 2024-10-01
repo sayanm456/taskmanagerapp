@@ -1,10 +1,9 @@
-/* eslint-disable no-undef */
 const express = require('express')
 const connectToDB = require('./db/db');
 
 connectToDB();
 const app = express()
-const port = 3000
+const port = 8000
 
 app.use(express.json())
 
@@ -14,5 +13,5 @@ app.use('/api/tasks', require('./routes/tasks'))
 
 
 app.listen(port, () => {
-  console.log(`tasmanager app listening on https://127.0.0.1:${port}`)
+  console.log(`tasmanager app listening on http://127.0.0.1:${port}`)
 })

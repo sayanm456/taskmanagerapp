@@ -7,15 +7,15 @@ const { authAdmin } = require('../middleware/authAdmin');
 
 // Create Task (user or admin)
 router.post(
-    '/addtask',
-    authUser, authAdmin,
+    '/createtask',
+    authAdmin,
     [
-        body('title').notEmpty().withMessage('Title is required'),
-        body('description').notEmpty().withMessage('Description is required'),
+        body('title', 'Enter a valid title').isLength({ min: 3}).notEmpty().withMessage('Title is required'),
+        body('description', 'Description must be atleast 5 charcters').isLength({ min: 5}).notEmpty().withMessage('Description is required'),
         body('due_date').isDate(new Date()).notEmpty().withMessage('Due date is required'),
-        body('status').notEmpty().withMessage('Status is required'),
-        body('priority').isIn(['Low', 'Medium', 'High']).notEmpty().withMessage('Priority is required'),
-        body('assigned_user').notEmpty().withMessage('Assigned to is required'),
+        body('status').isIn(['To Do', 'In Progress', 'Completed']).default('To Do').notEmpty().withMessage('Status is required'),
+        body('priority').isIn(['Low', 'Medium', 'High']).default('Medium').notEmpty().withMessage('Priority is required'),
+        body('assigned_user').isMongoId().notEmpty().withMessage('Assigned user must be a valid user Id!'),
     ],
     taskController.createTask
 )

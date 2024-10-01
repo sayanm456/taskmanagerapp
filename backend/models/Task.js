@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-undef
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
@@ -27,14 +26,16 @@ const TasksSchema = new Schema({
     },
     assigned_user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        require: true
     },
     created_by: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        require: true
     },
   },{ timestamps: true }
 );
 
-// eslint-disable-next-line no-undef
+mongoose.models = {}
 module.exports = mongoose.model('Task', TasksSchema);
