@@ -48,10 +48,11 @@ exports.registerUser = async (req, res) => {
 }
 
 //Login a user
-exports.loginUser = async (req, res) => {
-    const { email, password } = req.body;
+exports.loginUser = async (req, res) => {  
     try {
-        const user = await User.findOne({ email })
+        const { email, password, role } = req.body;
+
+        const user = await User.findOne({ email, role })
         if (!user) {
             return res.status(400).json({ message: 'Invalid credentials' })
         }
@@ -63,12 +64,13 @@ exports.loginUser = async (req, res) => {
 
         const data = {
             user: {
-                id: user.id
+                id: user.id,
+                role: user.role
             }
         }
 
         const authtoken = jwt.sign(data, JWT_SECRET_KEY, { expiresIn: '30d' });
-        res.json({ authtoken });
+        res.json({ data, authtoken });
 
     } catch (err) {
         res.status(500).send({ error: err.message, message: 'Internal Server Error' })
@@ -79,6 +81,7 @@ exports.getUser = async (req, res)=>{
     try {
         const userId = req.user.id;
         const user = await User.findById(userId).select("-password");
+        res.send(user);
         if(!user) {
             res.status(400).json({message: 'Access denied!'})
         }

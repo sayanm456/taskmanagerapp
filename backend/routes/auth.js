@@ -6,7 +6,8 @@ const { authAdmin, authUser } = require('../middleware/authUser');
 
 const router = express.Router();
 
-// Register route
+// Route 1: Register users based on theirn role: admin or user
+// GET: "api/auth/register"
 router.post(
   '/register',
   [
@@ -18,7 +19,8 @@ router.post(
   authController.registerUser
 );
 
-// Login route
+// Route 2: Get logged in user details based on theirn role: admin or user
+// POST: "api/auth/login"
 router.post('/login', [
   body('email', 'Enter a valid email').notEmpty().isEmail().withMessage('Valid email is required'),
   body('password', 'Password cannot be blank').exists().withMessage('Password must be at least 6 characters'),
@@ -26,5 +28,6 @@ router.post('/login', [
 
 module.exports = router;
 
-// Get user details
-router.get('/getuser', authUser, authAdmin , authController.getUser);
+// Get logged in user details based on their role: user or admin
+// POST: "api/auth/getuser" 
+router.post('/getuser', authUser , authController.getUser);

@@ -35,6 +35,8 @@ exports.createTask = async (req, res) => {
     try {
         const { title, description, due_date, status, priority, assigned_user } = req.body;
 
+        const created_by = req.user.id;
+
         // if there are any errors, return bad request
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -47,13 +49,16 @@ exports.createTask = async (req, res) => {
             status: status || 'To Do', // default status
             priority: priority || 'Medium', // default priority
             assigned_user: assigned_user,
-            created_by: req.user._id,
+            created_by,
         })
+
+        // const created_by = req.user.id;
+
         const newTask = await task.save();
         res.status(201).json({message: 'Task created successfully', newTask });
     } catch (err) {
-        console.log(err.message);
-        res.status(500).json({error: err, message: 'Internal Server Error' });
+        console.log(err);
+        res.status(500).json({ error: err, message: err.message });
     }
     
 }
