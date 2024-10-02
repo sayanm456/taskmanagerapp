@@ -29,9 +29,8 @@ exports.getTasks = async (req, res) => {
   };
 
 
-// Create a Task (admin or user can assign)
+// Create a Task (only admin can assign)
 exports.createTask = async (req, res) => {
-    
 
     try {
         const { title, description, due_date, status, priority, assigned_user } = req.body;
@@ -45,15 +44,16 @@ exports.createTask = async (req, res) => {
             title, 
             description,
             due_date,
-            status,
-            priority,
-            assigned_user: assigned_user || req.user._id,
+            status: status || 'To Do', // default status
+            priority: priority || 'Medium', // default priority
+            assigned_user: assigned_user,
             created_by: req.user._id,
         })
-        await task.save();
-        res.status(201).json({message: 'Task created successfully', task });
+        const newTask = await task.save();
+        res.status(201).json({message: 'Task created successfully', newTask });
     } catch (err) {
-        res.status(500).json({error: err, message: 'Internal Server Error' })
+        console.log(err.message);
+        res.status(500).json({error: err, message: 'Internal Server Error' });
     }
     
 }
@@ -73,8 +73,7 @@ exports.updateTask = async (req, res) => {
         if(assigned_user){ newTask.assigned_user = assigned_user };
         if(created_by){ newTask.created_by = created_by };
 
-
-
+        // Find the task to be updated and update it
         let task = await Task.findById(taskId);
         if (!task) return res.status(404).json({ message: 'Task not found' });
 

@@ -14,15 +14,14 @@ exports.registerUser = async (req, res) => {
         return res.status(400).json({ errors: errors.array()});
     }
 
-    const { name, email, password, role } = req.body;
     try {
-        // check whether the user with this email exists already
+        // Check whether the user with this email exists already
         let user = await User.findOne({ email: req.body.email });
         if (user) {
             return res.status(400).json({ error: "Sorry, User already registerd" });
         }
 
-        //Password Encryption
+        // Password Encryption
         const salt = await bcrypt.genSalt(10);
         const secPass = await bcrypt.hash(req.body.password, salt);
         
@@ -50,7 +49,7 @@ exports.registerUser = async (req, res) => {
 
 //Login a user
 exports.loginUser = async (req, res) => {
-    const { email, password, role } = req.body;
+    const { email, password } = req.body;
     try {
         const user = await User.findOne({ email })
         if (!user) {
@@ -73,5 +72,23 @@ exports.loginUser = async (req, res) => {
 
     } catch (err) {
         res.status(500).send({ error: err.message, message: 'Internal Server Error' })
+    }
+}
+
+exports.getUser = async (req, res)=>{
+    try {
+        const userId = req.user.id;
+        const user = await User.findById(userId).select("-password");
+        if(!user) {
+            res.status(400).json({message: 'Access denied!'})
+        }
+
+        // Check if the user is an admin or if the request is made by the user themselves
+        if (req.user.id !== user.id && req.user.role !== 'admin') {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
+    } catch (err) {
+        res.status(500).json({ error: err.message, message: 'Internal Server Error' })
     }
 }
