@@ -13,5 +13,5 @@ app.use('/api/tasks', require('./routes/tasks'))
 
 
 app.listen(port, () => {
-  console.log(`tasmanager app listening on http://127.0.0.1:${port}`)
+  console.log(`taskmanager app listening on http://127.0.0.1:${port}`)
 })
