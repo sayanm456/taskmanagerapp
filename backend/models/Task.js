@@ -25,16 +25,29 @@ const TasksSchema = new Schema({
         default: 'Medium'
     },
     assigned_user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        require: true
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+
+        },
+        name: {
+            type: String,
+            required: true
+        }
     },
     created_by: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        require: true
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        },
+        name: {
+            type: String,
+            required: true
+        }
     },
-  },{ timestamps: true }
+}, { timestamps: true }
 );
 
 mongoose.models = {}

@@ -23,7 +23,9 @@ router.post(
             .isIn(['Low', 'Medium', 'High'])
             .withMessage('Priority must be one of the Low, Medium, High')
             .default('Medium'),
-        body('assigned_user').isMongoId().notEmpty().withMessage('Assigned user must be a valid user Id!'),
+        body('assigned_user._id').isMongoId().notEmpty().withMessage('Assigned users id must be a valid user Id!'),
+        body('assigned_user.name').notEmpty().withMessage('Assigned users name must be a valid user Id!'),
+
     ],
     taskController.createTask
 )

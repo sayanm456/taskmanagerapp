@@ -60,14 +60,19 @@ exports.getTasks = async (req, res) => {
 // Create a Task (only admin can assign)
 exports.createTask = async (req, res) => {
   try {
-    const { title, description, due_date, status, priority, assigned_user } =
-      req.body;
+    const { title, description, due_date, status, priority, assigned_user} = req.body;
 
-    const created_by = req.user.id;
+    // const created_by = {
+    //   _id: req.user._id,
+    //   name: req.user.name,
+    // }
+    console.log(req.user.id, req.user.name)
+    success = false;
+    // console.log(req.user);
 
     // if there are any errors, return bad request
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty() && success) {
       return res.status(400).json({ errors: errors.array() });
     }
     const task = new Task({
@@ -76,16 +81,33 @@ exports.createTask = async (req, res) => {
       due_date,
       status: status || "To Do", // default status
       priority: priority || "Medium", // default priority
-      assigned_user: assigned_user,
-      created_by,
-    });
+      assigned_user: {
+          _id: assigned_user._id,
+          name: assigned_user.name
+      },
+      created_by: {
+          _id: req.user._id,
+          name: req.user.name,
 
-    // const created_by = req.user.id;
+      },
+    });
+    console.log(task.assigned_user, task.created_by);
+
+    console.log(task);
+
 
     const newTask = await task.save();
+
+    // let populatedTask = await Task(newTask._id).populate('assigned_user', 'name').populate('created_by', 'name');
+    // console.log(populatedTask);
+
+    newTask.save();
+    console.log(newTask)
+
     res.status(201).json({ message: "Task created successfully", newTask });
   } catch (err) {
     res.status(500).json({ error: err, message: err.message });
+    console.log(err.stack)
   }
 };
 

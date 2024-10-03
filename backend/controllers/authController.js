@@ -64,10 +64,12 @@ exports.loginUser = async (req, res) => {
 
         const data = {
             user: {
-                id: user.id,
+                _id: user.id,
+                name: user.name,
                 role: user.role
             }
         }
+        console.log(data)
 
         const authtoken = jwt.sign(data, JWT_SECRET_KEY, { expiresIn: '30d' });
         res.json({ data, authtoken });
