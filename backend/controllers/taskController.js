@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator");
 const Task = require("../models/Task");
 
-// Get all tasks (admin or user can view) 
+// Get all tasks (admin or user can view)
 // need to be attention
 exports.getTasks = async (req, res) => {
   /*const { status, priority, assigned_user } = req.query;
@@ -168,7 +168,14 @@ exports.getTaskSummary = async (req, res) => {
   }
 
   try {
-    const { status, assigned_user, priority, due_date, created_at, created_by } = req.query;
+    const {
+      status,
+      assigned_user,
+      priority,
+      due_date,
+      created_at,
+      created_by,
+    } = req.query;
 
     // Ensure user is admin
     if (!req.user || req.user.role !== "admin") {
@@ -187,22 +194,32 @@ exports.getTaskSummary = async (req, res) => {
     if (priority) filters.priority = priority;
     if (due_date) filters.due_date = { $gte: new Date(req.query.due_date) };
 
-    const totalTasks = await Task.countDocuments(filters);
+    // fetch task summary based on filters
+    const totalTasks = await Task.countDocuments();
+    const completedTasks = await Task.countDocuments({ status: "Completed" });
+    const inProgressTasks = await Task.countDocuments({
+      status: "In Progress",
+    });
+    const toDoTasks = await Task.countDocuments({ status: "To Do" });
 
     // fetch tasks based on query
-    // const tasks = await Task.find(filters).skip((page - 1)*limit).limit(limit).sort(created_at, -1);
     const tasks = await Task.find(filters)
       .limit(limit)
       .skip((page - 1) * limit)
-      .sort({ created_at: 1 });
+      .sort({ created_at: -1, due_date: -1 });
 
     // Generate task based summary based on the fetched task
     res.json({
-      currentPage: page,
-      limit,
-      totalTasks,
-      totalPages: Math.ceil(totalTasks / limit),
-      tasks: [tasks],
+      message: "Task summary retrived successfully",
+      summary: {
+        total: totalTasks,
+        completed: completedTasks,
+        inProgress: inProgressTasks,
+        toDo: toDoTasks,
+        currentPage: page,
+        limit: limit,
+      },
+      tasks: [tasks]
     });
   } catch (err) {
     res.status(500).json({ error: err, message: err.message });
