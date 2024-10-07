@@ -135,7 +135,8 @@ exports.updateTask = async (req, res) => {
     }
 
     // Find the task to be updated and update it
-    let task = await Task.findById(req.params.id);
+    const taskId = req.params.id;
+    let task = await Task.findOne({ _id: taskId});
     if (!task) return res.status(404).json({ message: "Task not found" });
 
     //Allow only admins or task owners to update

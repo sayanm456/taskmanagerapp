@@ -69,7 +69,7 @@ exports.loginUser = async (req, res) => {
                 role: user.role
             }
         }
-        console.log(data)
+        // console.log(data)
 
         const authtoken = jwt.sign(data, JWT_SECRET_KEY, { expiresIn: '30d' });
         res.json({ data, authtoken });
