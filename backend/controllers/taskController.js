@@ -66,13 +66,12 @@ exports.createTask = async (req, res) => {
     //   _id: req.user._id,
     //   name: req.user.name,
     // }
-    console.log(req.user.id, req.user.name)
-    success = false;
+    // console.log(req.user.id, req.user.name)
     // console.log(req.user);
 
     // if there are any errors, return bad request
     const errors = validationResult(req);
-    if (!errors.isEmpty() && success) {
+    if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
     const task = new Task({
@@ -91,10 +90,6 @@ exports.createTask = async (req, res) => {
 
       },
     });
-    console.log(task.assigned_user, task.created_by);
-
-    console.log(task);
-
 
     const newTask = await task.save();
 
@@ -102,7 +97,6 @@ exports.createTask = async (req, res) => {
     // console.log(populatedTask);
 
     newTask.save();
-    console.log(newTask)
 
     res.status(201).json({ message: "Task created successfully", newTask });
   } catch (err) {

@@ -5,7 +5,7 @@ const taskController = require('../controllers/taskController');
 const { authUser, authAdmin } = require('../middleware/authUser');
 
 // Create Task (admin or admins only)
-// POST: "api/tasks/createtask"
+// POST: "api/tasks/createtask" --its working--
 router.post(
     '/createtask',
     [
@@ -31,7 +31,7 @@ router.post(
 )
 
 // update Task by user_id (user or admin)
-// POST: "api/tasks/updatetask/:id"
+// POST: "api/tasks/updatetask/:id"  --its working--
 router.put('/updatetask/:id',
     [
         authUser,
@@ -44,9 +44,11 @@ router.put('/updatetask/:id',
     ],
     taskController.updateTask)
 
-// delete Task by user_id (user or admin)
+// 1.Need to work as soon as possible  
+// delete Task by user_id (user or admin) 
 router.delete('/deletetask/:id', authUser, authAdmin, taskController.deleteTask)
 
+// 2.Need to work as soon as possible  
 // get Task by user_id (user or admin)
 router.get('/getalltasks', authUser, authAdmin, [
     query('status').optional().isIn(['To Do', 'In Progress', 'Completed']).withMessage('Invalid status value'),
