@@ -57,6 +57,6 @@ router.get('/getalltasks', authUser, authAdmin, [
     query('limit').optional().isInt({ min: 1 }).withMessage('Limit must be a positive integer')
 ], taskController.getTasks)
 
-router.get('/tasksummary', [authUser, authAdmin], taskController.getTaskSummary)
+router.get('/tasksummary', authUser, authAdmin, taskController.getTaskSummary)
 
 module.exports = router;
