@@ -189,9 +189,7 @@ exports.getTaskSummary = async (req, res) => {
       status,
       assigned_user,
       priority,
-      due_date,
-      created_at,
-      created_by,
+      due_date
     } = req.query;
 
     // Ensure user is admin
