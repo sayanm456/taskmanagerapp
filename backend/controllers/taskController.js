@@ -60,7 +60,7 @@ exports.getTasks = async (req, res) => {
 // Create a Task (only admin can assign)
 exports.createTask = async (req, res) => {
   try {
-    const { title, description, due_date, status, priority, assigned_user} = req.body;
+    const { title, description, due_date, status, priority, assigned_user } = req.body;
 
     // const created_by = {
     //   _id: req.user._id,
@@ -81,13 +81,12 @@ exports.createTask = async (req, res) => {
       status: status || "To Do", // default status
       priority: priority || "Medium", // default priority
       assigned_user: {
-          _id: assigned_user._id,
-          name: assigned_user.name
+        _id: assigned_user._id,
+        name: assigned_user.name
       },
       created_by: {
-          _id: req.user._id,
-          name: req.user.name,
-
+        _id: req.user._id,
+        name: req.user.name,
       },
     });
 
@@ -130,7 +129,7 @@ exports.updateTask = async (req, res) => {
 
     // Find the task to be updated and update it
     const taskId = req.params.id;
-    let task = await Task.findOne({ _id: taskId});
+    let task = await Task.findOne({ _id: taskId });
     if (!task) return res.status(404).json({ message: "Task not found" });
 
     //Allow only admins or task owners to update
@@ -176,12 +175,11 @@ exports.deleteTask = async (req, res) => {
 };
 
 // Task summary report
-
 exports.getTaskSummary = async (req, res) => {
   // Handle Errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ errors: errors.array(), stack: errors.stack });
   }
 
   try {
@@ -205,36 +203,42 @@ exports.getTaskSummary = async (req, res) => {
     let filters = {};
 
     if (status) filters.status = status;
-    if (assigned_user) filters.assigned_user = assigned_user;
     if (priority) filters.priority = priority;
     if (due_date) filters.due_date = { $gte: new Date(req.query.due_date) };
+    console.log(filters);
 
     // fetch task summary based on filters
     const totalTasks = await Task.countDocuments();
-    const completedTasks = await Task.countDocuments({ status: "Completed" });
+    const completedTasks = await Task.countDocuments({ filters, status: "Completed"});
     const inProgressTasks = await Task.countDocuments({
-      status: "In Progress",
+      filters,
+      status: "In Progress"
     });
-    const toDoTasks = await Task.countDocuments({ status: "To Do" });
+    const toDoTasks = await Task.countDocuments({ filters, status: "To Do"});
 
     // fetch tasks based on query
     const tasks = await Task.find(filters)
-      .limit(limit)
-      .skip((page - 1) * limit)
-      .sort({ created_at: -1, due_date: -1 });
+            .limit(limit)
+            .skip((page - 1) * limit)
+            .sort({ created_at: -1, due_date: -1 });
+
+    if(totalTasks === 0){
+      return res.status(404).json({ message: 'No tasks found for the given users' });
+    }
+
 
     // Generate task based summary based on the fetched task
     res.json({
       message: "Task summary retrived successfully",
       summary: {
-        total: totalTasks,
+        totalTasks: totalTasks,
         completed: completedTasks,
         inProgress: inProgressTasks,
         toDo: toDoTasks,
         currentPage: page,
         limit: limit,
       },
-      tasks: [tasks]
+      tasks: tasks
     });
   } catch (err) {
     res.status(500).json({ error: err, message: err.message });

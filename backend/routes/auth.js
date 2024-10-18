@@ -2,7 +2,7 @@
 const express = require('express');
 const { body } = require('express-validator');
 const authController = require('../controllers/authController');
-const { authUser } = require('../middleware/authUser');
+const { authUser, authAdmin } = require('../middleware/authUser');
 
 const router = express.Router();
 
@@ -30,4 +30,4 @@ module.exports = router;
 
 // Get logged in user details based on their role: user or admin
 // POST: "api/auth/getuser" 
-router.post('/getuser', authUser , authController.getUser);
+router.get('/getuser', authController.getUsers);

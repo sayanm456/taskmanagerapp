@@ -79,9 +79,10 @@ exports.loginUser = async (req, res) => {
     }
 }
 
-exports.getUser = async (req, res)=>{
+// Get loggedin users details
+exports.getUsers = async (req, res)=>{
     try {
-        const userId = req.user.id;
+        const userId = req.user._id;
         const user = await User.findById(userId).select("-password");
         res.send(user);
         if(!user) {
@@ -89,7 +90,7 @@ exports.getUser = async (req, res)=>{
         }
 
         // Check if the user is an admin or if the request is made by the user themselves
-        if (req.user.id !== user.id && req.user.role !== 'admin') {
+        if (userId !== user._id && req.user.role !== 'admin') {
             return res.status(403).json({ message: 'Access denied' });
         }
 
