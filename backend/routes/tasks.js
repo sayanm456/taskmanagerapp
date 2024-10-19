@@ -9,8 +9,7 @@ const { authUser, authAdmin } = require('../middleware/authUser');
 router.post(
     '/createtask',
     [
-        authUser,
-        authAdmin,
+        [authUser, authAdmin] ,
         // Validation Middleware
         body('title', 'Enter a valid title').isLength({ min: 3 }).notEmpty().withMessage('Title is required'),
         body('description', 'Description must be atleast 5 charcters').isLength({ min: 5 }).notEmpty().withMessage('Description is required'),
@@ -44,13 +43,12 @@ router.put('/updatetask/:id',
     ],
     taskController.updateTask)
 
-// 1.Need to work as soon as possible  
 // delete Task by user_id (user or admin) 
-router.delete('/deletetask/:id', authUser, authAdmin, taskController.deleteTask)
+router.delete('/deletetask/:id', [authUser, authAdmin] , taskController.deleteTask)
 
-// 2.Need to work as soon as possible  
+// Need to work as soon as possible  
 // get Task by user_id (user or admin)
-router.get('/getalltasks', authUser, authAdmin, [
+router.get('/getalltasks', [authUser, authAdmin] , [
     query('status').optional().isIn(['To Do', 'In Progress', 'Completed']).withMessage('Invalid status value'),
     query('user').optional().isMongoId().withMessage('Invalid user ID'),
     query('startDate').optional().isISO8601().withMessage('Start date must be a valid date'),
@@ -59,6 +57,8 @@ router.get('/getalltasks', authUser, authAdmin, [
     query('limit').optional().isInt({ min: 1 }).withMessage('Limit must be a positive integer')
 ], taskController.getTasks)
 
-router.get('/tasksummary', authUser, authAdmin, taskController.getTaskSummary)
+// router.get('/tasksummary', taskController.getTaskSummary)
+router.get('/tasksummary', [authUser, authAdmin], taskController.getTaskSummary)
+
 
 module.exports = router;

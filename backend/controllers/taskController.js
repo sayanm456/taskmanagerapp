@@ -2,7 +2,7 @@ const { validationResult } = require("express-validator");
 const Task = require("../models/Task");
 
 // Get all tasks (admin or user can view)
-// need to be attention
+// Need to be work
 exports.getTasks = async (req, res) => {
   /*const { status, priority, assigned_user } = req.query;
   const filters = { created_by: req.user._id }; // Non-admin can see their own tasks
@@ -119,7 +119,6 @@ exports.updateTask = async (req, res) => {
     if (due_date) {
       newTask.due_date = due_date || new Date(due_date);
     }
-
     if (priority) {
       newTask.priority = priority || "Medium";
     }
@@ -149,7 +148,6 @@ exports.updateTask = async (req, res) => {
 };
 
 // delete a task (by user itself or admin)
-
 exports.deleteTask = async (req, res) => {
   const taskId = req.params.id;
 
@@ -160,15 +158,12 @@ exports.deleteTask = async (req, res) => {
     }
 
     //Allow only admins or task owners to delete
-    if (
-      task.created_by.toString() !== req.user._id.toString() &&
-      req.user.role !== "admin"
-    ) {
-      return res.status(403).json({ message: "Permission denied!" });
+    if (task.created_by.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Permission denied! Admin or Task owners only" });
     }
 
-    await task.remove();
-    res.json({ message: "Task deleted successfully" });
+    note = await Task.findByIdAndDelete(taskId);
+    res.json({ message: "Task deleted successfully", task: task });
   } catch (err) {
     res.status(500).json({ error: err, message: err.message });
   }
@@ -184,8 +179,8 @@ exports.getTaskSummary = async (req, res) => {
 
   try {
     const {
+      // assigned_user,
       status,
-      assigned_user,
       priority,
       due_date
     } = req.query;
@@ -204,17 +199,17 @@ exports.getTaskSummary = async (req, res) => {
 
     if (status) filters.status = status;
     if (priority) filters.priority = priority;
+    // if (assigned_user) filters.assigned_user._id = _id ; /* filter disabled. needs to work */
     if (due_date) filters.due_date = { $gte: new Date(req.query.due_date) };
-    console.log(filters);
+    console.log(filters, filters.assigned_user);
 
     // fetch task summary based on filters
     const totalTasks = await Task.countDocuments();
-    const completedTasks = await Task.countDocuments({ filters, status: "Completed"});
+    const completedTasks = await Task.countDocuments({status: "Completed"});
     const inProgressTasks = await Task.countDocuments({
-      filters,
       status: "In Progress"
     });
-    const toDoTasks = await Task.countDocuments({ filters, status: "To Do"});
+    const toDoTasks = await Task.countDocuments({status: "To Do"});
 
     // fetch tasks based on query
     const tasks = await Task.find(filters)
@@ -237,8 +232,9 @@ exports.getTaskSummary = async (req, res) => {
         toDo: toDoTasks,
         currentPage: page,
         limit: limit,
+        tasks: tasks
       },
-      tasks: tasks
+      // tasks: tasks
     });
   } catch (err) {
     res.status(500).json({ error: err, message: err.message });
