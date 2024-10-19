@@ -62,13 +62,6 @@ exports.createTask = async (req, res) => {
   try {
     const { title, description, due_date, status, priority, assigned_user } = req.body;
 
-    // const created_by = {
-    //   _id: req.user._id,
-    //   name: req.user.name,
-    // }
-    // console.log(req.user.id, req.user.name)
-    // console.log(req.user);
-
     // if there are any errors, return bad request
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -91,9 +84,6 @@ exports.createTask = async (req, res) => {
     });
 
     const newTask = await task.save();
-
-    // let populatedTask = await Task(newTask._id).populate('assigned_user', 'name').populate('created_by', 'name');
-    // console.log(populatedTask);
 
     newTask.save();
 
