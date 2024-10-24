@@ -4,57 +4,44 @@ const Task = require("../models/Task");
 // Get all tasks (admin or user can view)
 // Need to be work
 exports.getTasks = async (req, res) => {
-  /*const { status, priority, assigned_user } = req.query;
-  const filters = { created_by: req.user._id }; // Non-admin can see their own tasks
-  console.log(res.body)
-
-  if (status) filters.status = status;
-  if (priority) filters.priority = priority;
-  if (req.user.role === "admin" && assigned_user)
-    filters.assigned_user = assigned_user;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array(), stack: errors.stack });
+  }
 
   try {
-    const userId = req.user.id;
-    const userRole = req.user.role;
+    
+    let tasks = [];
+    let totalTasks = 0;
 
-    // Pagination parameters from query
-    let page = parseInt(req.query.page) || 1;
-    let limit = parseInt(req.query.limit) || 10;
-    console.log(page, limit);
-
-    let filters = {};
-
-    if (userRole !== "admin") {
-      filters = {
-        $or: [
-          {
-            assigned_user: userId,
-            created_by: userId,
-          },
-        ],
-      };
+    // check if user is an admin, fetch all tasks
+    if (req.user.role === "admin") {
+      tasks = await Task.find().populate('created_by', 'name').populate('assigned_user', 'name');
+      totalTasks = await Task.countDocuments();
     }
 
-    const tasks = await Task.find(filters)
-      .limit(limit)
-      .skip((page - 1) * limit)
-      .sort({ created_at: -1 });
+    // if user is not admin, fetch only their tasks
+    else{
+      tasks = await Task.find(
+        { "assigned_user._id": req.user._id }
+      )
+      totalTasks = await Task.countDocuments({ "assigned_user._id": req.user._id });
+    }  
+    
+    // If no tasks found
+    if (!tasks) return res.status(404).json({ message: "Tasks not found" });
 
-    console.log(tasks);
+    // Pagination parameters from query
+    /*let page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 10;
+    console.log(page, limit);*/
 
-    const totalTasks = await Task.countDocuments(filters);
-    res.json({
-      currentPage: page,
-      limit,
-      totalTasks,
-      totalPages: Math.ceil(count / limit),
-      tasks: [tasks],
-    });
-    console.log(tasks);
+    /*let filters = {};*/
+
+    res.json({totalTasks, tasks});
   } catch (error) {
     res.status(500).json({ error: error, message: error.message });
-    console.log(error.array());
-  }*/
+  }
 };
 
 // Create a Task (only admin can assign)
@@ -122,7 +109,7 @@ exports.updateTask = async (req, res) => {
     if (!task) return res.status(404).json({ message: "Task not found" });
 
     //Allow only admins or task owners to update
-    if (task.id.toString() !== req.user.id && req.user.role !== "admin") {
+    if (task.created_by.toString() !== req.user.id.toString() && req.user.role !== "admin") {
       return res.status(401).json({ message: "Permission denied!" });
     }
 
@@ -152,7 +139,7 @@ exports.deleteTask = async (req, res) => {
       return res.status(403).json({ message: "Permission denied! Admin or Task owners only" });
     }
 
-    note = await Task.findByIdAndDelete(taskId);
+    task = await Task.findByIdAndDelete(taskId);
     res.json({ message: "Task deleted successfully", task: task });
   } catch (err) {
     res.status(500).json({ error: err, message: err.message });
@@ -164,7 +151,7 @@ exports.getTaskSummary = async (req, res) => {
   // Handle Errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array(), stack: errors.stack });
+    return res.status(400).json({ errors: errors.array()});
   }
 
   try {
@@ -191,7 +178,7 @@ exports.getTaskSummary = async (req, res) => {
     if (priority) filters.priority = priority;
     // if (assigned_user) filters.assigned_user._id = _id ; /* filter disabled. needs to work */
     if (due_date) filters.due_date = { $gte: new Date(req.query.due_date) };
-    console.log(filters, filters.assigned_user);
+    // console.log(filters, filters.assigned_user); // for debuging
 
     // fetch task summary based on filters
     const totalTasks = await Task.countDocuments();
