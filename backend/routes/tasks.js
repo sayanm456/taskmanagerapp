@@ -45,20 +45,11 @@ router.put('/updatetask/:id',
 
 // delete Task by user_id (user or admin) 
 router.delete('/deletetask/:id', [authUser, authAdmin] , taskController.deleteTask)
-
-// Need to work as soon as possible  
-// get Task by user_id (user or admin)
-/*router.get('/getalltasks', [authUser, authAdmin] , [
-    query('status').optional().isIn(['To Do', 'In Progress', 'Completed']).withMessage('Invalid status value'),
-    query('user').optional().isMongoId().withMessage('Invalid user ID'),
-    query('startDate').optional().isISO8601().withMessage('Start date must be a valid date'),
-    query('endDate').optional().isISO8601().withMessage('End date must be a valid date'),
-    query('page').optional().isInt({ min: 1 }).withMessage('Page number must be a positive integer'),
-    query('limit').optional().isInt({ min: 1 }).withMessage('Limit must be a positive integer')
-], taskController.getTasks)*/
     
+// get all tasks by admin or task-owners
 router.get('/getalltasks', [authUser], taskController.getTasks)
 
+//create a task summary report for / by admin
 router.get('/tasksummary', [authUser, authAdmin], taskController.getTaskSummary)
 
 

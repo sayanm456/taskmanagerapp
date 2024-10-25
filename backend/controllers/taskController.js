@@ -9,36 +9,57 @@ exports.getTasks = async (req, res) => {
     return res.status(400).json({ errors: errors.array(), stack: errors.stack });
   }
 
+  const { status, priority, due_date } = req.query;
+
   try {
     
     let tasks = [];
+    let taskPerPage;
     let totalTasks = 0;
+
+    // Pagination parameters from query
+    let page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 10;
+
+    let filters = {};
+
+    // Filtering tasks based on query parameters
+    if (status) filters.status = status;
+    if (priority) filters.priority = priority;
+    if (due_date) filters.due_date = { $gte: new Date(req.query.due_date) };
 
     // check if user is an admin, fetch all tasks
     if (req.user.role === "admin") {
-      tasks = await Task.find().populate('created_by', 'name').populate('assigned_user', 'name');
+      tasks = await Task.find(filters? filters: {}).populate('created_by', 'name').populate('assigned_user', 'name')
+                        .limit(limit)
+                        .skip((page - 1) * limit)
+                        .sort({ created_at: -1, due_date: -1 });
       totalTasks = await Task.countDocuments();
+      taskPerPage = Math.ceil(totalTasks/page);
     }
 
     // if user is not admin, fetch only their tasks
     else{
       tasks = await Task.find(
-        { "assigned_user._id": req.user._id }
-      )
+        { "assigned_user._id": req.user._id },
+        filters ? filters : {}
+      ).limit(limit)
+       .skip((page - 1) * limit)
+       .sort({ created_at: -1, due_date: -1 })
       totalTasks = await Task.countDocuments({ "assigned_user._id": req.user._id });
-    }  
+      taskPerPage = Math.ceil(totalTasks/page);
+    }
     
     // If no tasks found
     if (!tasks) return res.status(404).json({ message: "Tasks not found" });
 
-    // Pagination parameters from query
-    /*let page = parseInt(req.query.page) || 1;
-    let limit = parseInt(req.query.limit) || 10;
-    console.log(page, limit);*/
+    if(totalTasks !== 0 && taskPerPage>=limit){
+      res.status(200).json({page, limit, totalTasks, tasks});
+    }
+    else{
+      res.status(404).json({message: "No more tasks, task limit excceded"})
+    }
 
-    /*let filters = {};*/
-
-    res.json({totalTasks, tasks});
   } catch (error) {
     res.status(500).json({ error: error, message: error.message });
   }
@@ -156,7 +177,7 @@ exports.getTaskSummary = async (req, res) => {
 
   try {
     const {
-      // assigned_user,
+      userId,
       status,
       priority,
       due_date
@@ -174,25 +195,38 @@ exports.getTaskSummary = async (req, res) => {
 
     let filters = {};
 
-    if (status) filters.status = status;
-    if (priority) filters.priority = priority;
-    // if (assigned_user) filters.assigned_user._id = _id ; /* filter disabled. needs to work */
+    
+    if (userId) filters["assigned_user._id"] = userId ; 
+    if (status) filters.status = status || "To Do";
+    if (priority) filters.priority = priority || "In Progress";
     if (due_date) filters.due_date = { $gte: new Date(req.query.due_date) };
-    // console.log(filters, filters.assigned_user); // for debuging
+    console.log(filters, userId); // for debuging
 
     // fetch task summary based on filters
-    const totalTasks = await Task.countDocuments();
-    const completedTasks = await Task.countDocuments({status: "Completed"});
-    const inProgressTasks = await Task.countDocuments({
-      status: "In Progress"
-    });
-    const toDoTasks = await Task.countDocuments({status: "To Do"});
+    let totalTasks, completedTasks, inProgressTasks, toDoTasks;
 
+    if(filters){
+      totalTasks = await Task.countDocuments(filters);
+      completedTasks = await Task.countDocuments({...filters, status: "Completed"});
+      inProgressTasks = await Task.countDocuments(
+        {...filters, status: "In Progress"}
+      );
+      toDoTasks = await Task.countDocuments({...filters, status: "To Do"});
+    }
+    else{ 
+      totalTasks = await Task.countDocuments({});
+      completedTasks = await Task.countDocuments({ status: "Completed"});
+      inProgressTasks = await Task.countDocuments({ status: "In Progress"});
+      toDoTasks = await Task.countDocuments({ status: "To Do" });
+    } 
+    
+      
     // fetch tasks based on query
-    const tasks = await Task.find(filters)
-            .limit(limit)
-            .skip((page - 1) * limit)
+    const tasks = await Task.find({})
+            // .limit(limit)
+            // .skip((page - 1) * limit)
             .sort({ created_at: -1, due_date: -1 });
+    console.log(tasks.length)
 
     if(totalTasks === 0){
       return res.status(404).json({ message: 'No tasks found for the given users' });
@@ -211,7 +245,6 @@ exports.getTaskSummary = async (req, res) => {
         limit: limit,
         tasks: tasks
       },
-      // tasks: tasks
     });
   } catch (err) {
     res.status(500).json({ error: err, message: err.message });
