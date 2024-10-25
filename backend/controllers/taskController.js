@@ -12,10 +12,7 @@ exports.getTasks = async (req, res) => {
   const { status, priority, due_date } = req.query;
 
   try {
-    
-    let tasks = [];
-    let taskPerPage;
-    let totalTasks = 0;
+
 
     // Pagination parameters from query
     let page = parseInt(req.query.page) || 1;
@@ -24,41 +21,43 @@ exports.getTasks = async (req, res) => {
     let filters = {};
 
     // Filtering tasks based on query parameters
-    if (status) filters.status = status;
-    if (priority) filters.priority = priority;
+
+    let tasks = {};
+    if (status) filters.status = status || "To Do";
+    if (priority) filters.priority = priority || "Medium";
     if (due_date) filters.due_date = { $gte: new Date(req.query.due_date) };
 
     // check if user is an admin, fetch all tasks
-    if (req.user.role === "admin") {
-      tasks = await Task.find(filters? filters: {}).populate('created_by', 'name').populate('assigned_user', 'name')
-                        .limit(limit)
-                        .skip((page - 1) * limit)
-                        .sort({ created_at: -1, due_date: -1 });
-      totalTasks = await Task.countDocuments();
-      taskPerPage = Math.ceil(totalTasks/page);
-    }
+    tasks = await Task.find(filters)
+        .populate("created_by", "name")
+        .populate("assigned_user", "name")
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .sort({ created_at: -1, due_date: -1 });
+    let totalTasks = await Task.countDocuments(filters);
 
-    // if user is not admin, fetch only their tasks
-    else{
+    // if user is not admin, fetch only task-owners ot users tasks
+    if (req.user.role !== "admin") {
       tasks = await Task.find(
-        { "assigned_user._id": req.user._id },
-        filters ? filters : {}
-      ).limit(limit)
+        { "assigned_user._id": req.user._id, ...filters }
+      ).populate("created_by", "name")
+       .populate("assigned_user", "name")
        .skip((page - 1) * limit)
+       .limit(limit)
        .sort({ created_at: -1, due_date: -1 })
-      totalTasks = await Task.countDocuments({ "assigned_user._id": req.user._id });
-      taskPerPage = Math.ceil(totalTasks/page);
+      totalTasks = await Task.countDocuments({ "assigned_user._id": req.user._id, ...filters});
     }
-    
-    // If no tasks found
-    if (!tasks) return res.status(404).json({ message: "Tasks not found" });
 
-    if(totalTasks !== 0 && taskPerPage>=limit){
-      res.status(200).json({page, limit, totalTasks, tasks});
+    // If no more tasks are available
+    if(page > Math.ceil(totalTasks/limit)){
+        return res.status(404).json({ message: "No more tasks, task limit excceded"})
     }
-    else{
-      res.status(404).json({message: "No more tasks, task limit excceded"})
-    }
+
+    // If no tasks found
+    if (!tasks && totalTasks === 0) return res.status(404).json({ message: "Tasks not found" });
+
+    res.status(200).json({ page, limit, totalTasks, tasks });
+
 
   } catch (error) {
     res.status(500).json({ error: error, message: error.message });
@@ -172,7 +171,7 @@ exports.getTaskSummary = async (req, res) => {
   // Handle Errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array()});
+    return res.status(400).json({ errors: errors.array() });
   }
 
   try {
@@ -192,43 +191,43 @@ exports.getTaskSummary = async (req, res) => {
 
     let page = parseInt(req.query.page) || 1;
     let limit = parseInt(req.query.limit) || 10;
+    let totalTasks, completedTasks, inProgressTasks, toDoTasks;
 
     let filters = {};
 
-    
-    if (userId) filters["assigned_user._id"] = userId ; 
+
+    if (userId) filters["assigned_user._id"] = userId;
     if (status) filters.status = status || "To Do";
-    if (priority) filters.priority = priority || "In Progress";
-    if (due_date) filters.due_date = { $gte: new Date(req.query.due_date) };
-    console.log(filters, userId); // for debuging
+    if (priority) filters.priority = priority || "Medium";
+    if (due_date) filters["due_date"] = { $gte: new Date(req.query.due_date) };
+    // console.log(filters);
 
     // fetch task summary based on filters
-    let totalTasks, completedTasks, inProgressTasks, toDoTasks;
 
-    if(filters){
-      totalTasks = await Task.countDocuments(filters);
-      completedTasks = await Task.countDocuments({...filters, status: "Completed"});
+    if (filters) {
+      totalTasks = await Task.countDocuments({ ...filters });
+      completedTasks = await Task.countDocuments({ ...filters, status: "Completed" });
       inProgressTasks = await Task.countDocuments(
-        {...filters, status: "In Progress"}
+        { ...filters, status: "In Progress" }
       );
-      toDoTasks = await Task.countDocuments({...filters, status: "To Do"});
+      toDoTasks = await Task.countDocuments({ ...filters, status: "To Do" });
     }
-    else{ 
+    else {
       totalTasks = await Task.countDocuments({});
-      completedTasks = await Task.countDocuments({ status: "Completed"});
-      inProgressTasks = await Task.countDocuments({ status: "In Progress"});
+      completedTasks = await Task.countDocuments({ status: "Completed" });
+      inProgressTasks = await Task.countDocuments({ status: "In Progress" });
       toDoTasks = await Task.countDocuments({ status: "To Do" });
-    } 
-    
-      
-    // fetch tasks based on query
-    const tasks = await Task.find({})
-            // .limit(limit)
-            // .skip((page - 1) * limit)
-            .sort({ created_at: -1, due_date: -1 });
-    console.log(tasks.length)
+    }
 
-    if(totalTasks === 0){
+
+    // fetch tasks based on query
+    const tasks = await Task.find(filters ? filters : {})
+      .limit(limit)
+      .skip((page - 1) * limit)
+      .sort({ created_at: -1, due_date: -1 });
+    // console.log(tasks);
+
+    if (totalTasks === 0) {
       return res.status(404).json({ message: 'No tasks found for the given users' });
     }
 
