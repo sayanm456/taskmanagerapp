@@ -21,7 +21,7 @@ exports.getTasks = async (req, res) => {
     let filters = {};
 
     // Filtering tasks based on query parameters
-
+    
     let tasks = {};
     if (status) filters.status = status || "To Do";
     if (priority) filters.priority = priority || "Medium";

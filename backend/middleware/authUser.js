@@ -16,6 +16,7 @@ const authUser = async (req, res, next) => {
     }
 }
 
+// Middleware to authenticate admin users only
 const authAdmin = (req, res, next)=>{
     // Authenticate admin user
     if(req.user && req.user.role !== 'admin'){

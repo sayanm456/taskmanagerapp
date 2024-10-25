@@ -46,7 +46,7 @@ router.put('/updatetask/:id',
 // delete Task by user_id (user or admin) 
 router.delete('/deletetask/:id', [authUser, authAdmin] , taskController.deleteTask)
     
-// get all tasks by admin or task-owners
+// get all tasks by admin or task-user
 router.get('/getalltasks', [authUser], taskController.getTasks)
 
 //create a task summary report for / by admin

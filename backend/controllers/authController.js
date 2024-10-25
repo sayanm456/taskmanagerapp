@@ -5,7 +5,6 @@ const { validationResult } = require('express-validator');
 
 JWT_SECRET_KEY = "User#AuThenTication"
 
-
 //Register a user
 exports.registerUser = async (req, res) => {
     // if there are any error or errors, return bad requests and the errors
