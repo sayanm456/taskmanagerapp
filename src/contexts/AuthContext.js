@@ -1,7 +1,7 @@
 import React, {createContext } from 'react'
 import { loginUser } from '../apis/authapi';
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -39,5 +39,3 @@ export const AuthProvider = ({ children }) => {
     
   )
 }
-
-export default AuthContext
