@@ -1,14 +1,20 @@
 const express = require('express');
+
+const cors = require('cors');
+require('dotenv').config({
+   path: '../.env.local'
+})
 const { connectToDB, closeDB } = require('./db/db');
 
 
 // Connect to the MongoDB Database before starting the server
 connectToDB();
 
-const app = express()
-const port = 8000
+const app = express();
+const port = process.env.PORT;
 
-app.use(express.json())
+app.use(express.json());
+app.use(cors())
 
 //Available Routes for apis
 app.use('/api/auth', require('./routes/auth'))
@@ -25,5 +31,5 @@ app.on('close', async () => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`taskmanager app listening on http://127.0.0.1:${port}`)
+  console.log(`taskmanager app listening on ${process.env.SERVER_HOST}:${port}`)
 })

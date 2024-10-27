@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET_KEY = "User#AuThenTication"
 
 const authUser = async (req, res, next) => {
     const token = req.header('auth-token');
@@ -7,7 +6,7 @@ const authUser = async (req, res, next) => {
         return res.status(401).json({message: 'authorization denied, please authenticate using valid token!'})
     }
     try{   
-        const data = jwt.verify(token, JWT_SECRET_KEY);
+        const data = jwt.verify(token, process.env.JWT_SECRET_KEY);
         req.user = data.user;
         next();
     }

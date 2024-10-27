@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 
-JWT_SECRET_KEY = "User#AuThenTication"
 
 //Register a user
 exports.registerUser = async (req, res) => {
@@ -36,7 +35,7 @@ exports.registerUser = async (req, res) => {
                 id: user.id
             }
         }
-        const authtoken = jwt.sign(data, JWT_SECRET_KEY);
+        const authtoken = jwt.sign(data, process.env.JWT_SECRET_KEY);
 
         res.status(201).json({authtoken, message: 'User registered successfully'});
         
@@ -70,7 +69,7 @@ exports.loginUser = async (req, res) => {
         }
         // console.log(data)
 
-        const authtoken = jwt.sign(data, JWT_SECRET_KEY, { expiresIn: '30d' });
+        const authtoken = jwt.sign(data, process.env.JWT_SECRET_KEY, { expiresIn: '30d' });
         res.json({ data, authtoken });
 
     } catch (err) {
