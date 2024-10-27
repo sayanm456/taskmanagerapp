@@ -1,11 +1,11 @@
-import './App.css'
+import Sidebar from "./components/Sidebar"
 
 function App() {
 
   return (
-    <>
-        <h1>This is Task Management App</h1>
-    </>
+    
+      <Sidebar/>
+    
   )
 }
 
