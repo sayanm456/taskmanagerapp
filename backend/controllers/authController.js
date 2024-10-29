@@ -40,7 +40,6 @@ exports.registerUser = async (req, res) => {
         res.status(201).json({authtoken, message: 'User registered successfully'});
         
     } catch (err) {
-        console.log(err.message);
         res.status(500).send("Internal Server Error");
     }
 }
@@ -67,10 +66,9 @@ exports.loginUser = async (req, res) => {
                 role: user.role
             }
         }
-        // console.log(data)
 
         const authtoken = jwt.sign(data, process.env.JWT_SECRET_KEY, { expiresIn: '30d' });
-        res.json({ data, authtoken });
+        res.json({ authtoken });
 
     } catch (err) {
         res.status(500).send({ error: err.message, message: 'Internal Server Error' })
