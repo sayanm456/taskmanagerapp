@@ -1,4 +1,4 @@
-const API_URL = `${process.env.SERVER_HOST}${process.env.PORT}`
+// const API_URL = `${process.env.SERVER_HOST}${process.env.PORT}`
 
 
 export const loginUser = async (credentials) => {
