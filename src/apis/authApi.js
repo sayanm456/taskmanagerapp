@@ -13,7 +13,7 @@ export const loginUser = async (credentials) => {
 }
 
 
-export const registerUser = async (userdetails) => {
+export const registerUser = async (credentials) => {
     const response = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
