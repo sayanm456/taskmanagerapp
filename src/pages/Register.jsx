@@ -5,9 +5,8 @@ import { useNavigate } from 'react-router-dom'
 const Register = () => {
 
   const [credentials, setCredentials] = useState({ name: "", email: "", password: "", cpassword: "", role: "user" })
-  const handleChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value })
-  }
+  
+  
 
   const resetForm = ()=>{
     setCredentials({ name: "", email: "", password: "", cpassword: "", role: "user" });
@@ -38,8 +37,8 @@ const Register = () => {
     }
   }
 
-  const onChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value })
   }
 
   return (
@@ -66,7 +65,7 @@ const Register = () => {
             </div>
             <div className="mb-4">
               <label className="block text-sm font-bold mb-2 text-gray-600">Role</label>
-              <select name='role' className="border border-gray-300 p-2 rounded w-full" onChange={onChange}>
+              <select name='role' className="border border-gray-300 p-2 rounded w-full" onChange={handleChange}>
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
               </select>
