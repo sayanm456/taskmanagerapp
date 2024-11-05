@@ -1,9 +1,9 @@
 import React from 'react'
 
-const UserTasks = () => {
+const TaskDash = () => {
   return (
-    <div>UserTasks</div>
+    <div>TaskDash</div>
   )
 }
 
-export default UserTasks
+export default TaskDash

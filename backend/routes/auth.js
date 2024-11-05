@@ -23,6 +23,7 @@ router.post(
 router.post('/login', [
   body('email', 'Enter a valid email').notEmpty().isEmail().withMessage('Valid email is required'),
   body('password', 'Password cannot be blank').exists().withMessage('Password must be at least 6 characters'),
+  body('role').isIn(['admin', 'user']).withMessage('role must be required'),
 ], authController.loginUser);
 
 module.exports = router;

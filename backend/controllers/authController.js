@@ -7,21 +7,27 @@ const { validationResult } = require('express-validator');
 //Register a user
 exports.registerUser = async (req, res) => {
     // if there are any error or errors, return bad requests and the errors
+    let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array()});
     }
 
     try {
-        // Check whether the user with this email exists already
-        let user = await User.findOne({ email: req.body.email });
-        if (user) {
-            return res.status(400).json({ error: "Sorry, User already registerd" });
-        }
 
         // Password Encryption
         const salt = await bcrypt.genSalt(10);
         const secPass = await bcrypt.hash(req.body.password, salt);
+
+        // Check whether the user with this email exists already
+        let user = await User.findOne({ email: req.body.email, password: secPass });
+        if (user?.email?.password) {
+            return res.status(400).json({ success, error: "Sorry, User already registerd" });
+        }
+
+        // // Password Encryption
+        // const salt = await bcrypt.genSalt(10);
+        // const secPass = await bcrypt.hash(req.body.password, salt);
         
         // Create a User
         user = await User.create({
@@ -37,7 +43,8 @@ exports.registerUser = async (req, res) => {
         }
         const authtoken = jwt.sign(data, process.env.JWT_SECRET_KEY);
 
-        res.status(201).json({authtoken, message: 'User registered successfully'});
+        success = true;
+        res.status(201).json({success, authtoken, message: 'User registered successfully'});
         
     } catch (err) {
         res.status(500).send("Internal Server Error");

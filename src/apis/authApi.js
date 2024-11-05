@@ -1,4 +1,9 @@
-// const API_URL = `${process.env.SERVER_HOST}${process.env.PORT}`
+// const { SERVER_HOST, PORT } = window.env ;
+const SERVER_HOST="http://127.0.0.1"
+const PORT = "8000"
+
+
+const API_URL = `${SERVER_HOST}:${PORT}`
 
 
 export const loginUser = async (credentials) => {

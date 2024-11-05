@@ -16,7 +16,7 @@ const Sidebar = () => {
             <button type="button"
               className="flex items-center justify-between w-full p-3 font-sans text-xl antialiased font-semibold leading-snug text-left transition-colors border-b-0 select-none border-b-blue-gray-100 text-blue-gray-700 hover:text-blue-gray-900">
               <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
-                Dashboard
+                <a href={"/dashboard"}>Dashboard</a> 
               </p>
             </button>
           </div>

@@ -3,7 +3,8 @@ import Sidebar from "./components/Sidebar"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 // import Layout from "./components/Layout"
-import Header from "./components/Header"
+import AdminDash from "./pages/AdminDash"
+import TaskDash from "./pages/TaskDash"
 
 
 function App() {
@@ -15,9 +16,10 @@ function App() {
           <Sidebar />
           <div className="flex-1 bg-gray-100">
             <Routes>
+              <Route path="/admin" element={<h2 className="text-2xl">{<AdminDash/>}</h2>} />
+              <Route path="/" element={<h2 className="text-2xl">{<TaskDash/>}</h2>} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/" element={<h2 className="text-2xl">{<Header/>}</h2>} />
             </Routes>
           </div>
         </div>

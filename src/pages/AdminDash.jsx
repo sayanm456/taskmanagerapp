@@ -1,8 +1,12 @@
 import React from 'react'
+import Header from '../components/Header'
 
 const AdminDash = () => {
   return (
-    <div>AdminDash</div>
+    <>
+     <Header/>
+     <div>AdminDash</div>
+    </>
   )
 }
 
