@@ -38,13 +38,14 @@ exports.registerUser = async (req, res) => {
         });
         const data = {
             user: {
-                id: user.id
+                id: user.id,
+                role: user.role
             }
         }
         const authtoken = jwt.sign(data, process.env.JWT_SECRET_KEY);
 
         success = true;
-        res.status(201).json({success, authtoken, message: 'User registered successfully'});
+        res.status(201).json({data, success, authtoken, message: 'User registered successfully'});
         
     } catch (err) {
         res.status(500).send("Internal Server Error");

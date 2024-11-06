@@ -5,8 +5,6 @@ import { useNavigate } from 'react-router-dom'
 const Signup = () => {
 
   const [credentials, setCredentials] = useState({ name: "", email: "", password: "", cpassword: "", role: "user" })
-  
-  
 
   const resetForm = ()=>{
     setCredentials({ name: "", email: "", password: "", cpassword: "", role: "user" });
