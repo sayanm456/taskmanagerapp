@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Sidebar from "./components/Sidebar"
 import Login from "./pages/Login"
-import Register from "./pages/Register"
+import Signup from "./pages/Signup"
 // import Layout from "./components/Layout"
 import AdminDash from "./pages/AdminDash"
 import TaskDash from "./pages/TaskDash"
@@ -19,7 +19,7 @@ function App() {
               <Route path="/admin" element={<h2 className="text-2xl">{<AdminDash/>}</h2>} />
               <Route path="/" element={<h2 className="text-2xl">{<TaskDash/>}</h2>} />
               <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route path="/signup" element={<Signup />} />
             </Routes>
           </div>
         </div>
