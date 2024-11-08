@@ -16,7 +16,8 @@ function App() {
           <Sidebar />
           <div className="flex-1 bg-gray-100">
             <Routes>
-              <Route path="/admin" element={<h2 className="text-2xl">{<AdminDash/>}</h2>} />
+              <Route path="/admindash" element={<h2 className="text-2xl">{<AdminDash/>}</h2>} />
+              <Route path="/userdash" element={<h2 className="text-2xl">{<TaskDash/>}</h2>}/>
               <Route path="/" element={<h2 className="text-2xl">{<TaskDash/>}</h2>} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />

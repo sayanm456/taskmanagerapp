@@ -27,7 +27,7 @@ const Signup = () => {
         alert("User registered successfully");
         localStorage.setItem('token', response.authtoken);
         resetForm();
-        navigate('/login');
+        navigate('/dashboard');
       }
       else{
         alert("Invalid Credentials");
@@ -42,7 +42,7 @@ const Signup = () => {
   return (
     <>
       <section className="text-gray-600 body-font">
-        <div className="container px-80 py-10 flex flex-auto flex-wrap items-center">
+        <div className="container px-80 pt-10 flex flex-auto flex-wrap items-center">
           <form onSubmit={handleSubmit} className="bg-gray-100 rounded-lg flex flex-col md:ml-auto w-full mt-10 md:mt-0">
             <h1 className="text-gray-900 text-3xl font-bold title-font mb-5 self-center">Register Now!</h1>
             <div className="relative mb-4">
@@ -71,6 +71,7 @@ const Signup = () => {
             <button className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Register</button>
           </form>
         </div>
+        <h5 className='text-sm pt-2 text-center drop-shadow-sm'>Already registerd? <a href="/login" className='ml-1'>click here to login!</a></h5>
       </section>
     </>
   )
