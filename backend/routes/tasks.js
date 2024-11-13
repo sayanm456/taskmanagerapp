@@ -34,7 +34,6 @@ router.post(
 router.put('/updatetask/:id',
     [
         authUser,
-        authAdmin,
         body('title', 'Enter a valid title').isLength({ min: 3 }).notEmpty().withMessage('Title is required'),
         body('description', 'Description must be atleast 5 charcters').isLength({ min: 5 }).notEmpty().withMessage('Description is required'),
         body('due_date').isISO8601().optional(),
@@ -44,7 +43,7 @@ router.put('/updatetask/:id',
     taskController.updateTask)
 
 // delete Task by user_id (user or admin) 
-router.delete('/deletetask/:id', [authUser, authAdmin] , taskController.deleteTask)
+router.delete('/deletetask/:id', [authUser] , taskController.deleteTask)
     
 // get all tasks by admin or task-user
 router.get('/getalltasks', [authUser], taskController.getTasks)

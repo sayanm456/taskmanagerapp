@@ -2,7 +2,7 @@ const express = require('express');
 
 const cors = require('cors');
 require('dotenv').config({
-   path: '.env.local'
+   path: '../.env.local' || '.env.local'
 })
 const { connectToDB, closeDB } = require('./db/db');
 

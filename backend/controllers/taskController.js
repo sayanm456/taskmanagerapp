@@ -97,7 +97,6 @@ exports.createTask = async (req, res) => {
     res.status(201).json({ message: "Task created successfully", newTask });
   } catch (err) {
     res.status(500).json({ error: err, message: err.message });
-    console.log(err.stack)
   }
 };
 
@@ -129,7 +128,7 @@ exports.updateTask = async (req, res) => {
     if (!task) return res.status(404).json({ message: "Task not found" });
 
     //Allow only admins or task owners to update
-    if (task.created_by.toString() !== req.user.id.toString() && req.user.role !== "admin") {
+    if (task.assigned_user._id.toString() !== req.user._id.toString() && req.user.role !== "admin") {
       return res.status(401).json({ message: "Permission denied!" });
     }
 
@@ -155,7 +154,7 @@ exports.deleteTask = async (req, res) => {
     }
 
     //Allow only admins or task owners to delete
-    if (task.created_by.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+    if (task.assigned_user._id.toString() !== req.user._id.toString() && req.user.role !== "admin") {
       return res.status(403).json({ message: "Permission denied! Admin or Task owners only" });
     }
 

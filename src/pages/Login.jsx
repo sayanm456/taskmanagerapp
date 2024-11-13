@@ -33,7 +33,7 @@ const Login = () => {
 
   return (
     <>
-      <section className="text-gray-600 body-font">
+      <section className="text-gray-600 body-font font-medium">
         <div className="container px-80 pt-10 flex flex-auto flex-wrap items-center mt-10">
           <form onSubmit={handleSubmit} className="bg-gray-100 rounded-lg flex flex-col md:ml-auto w-full mt-10 md:mt-0">
             <h1 className="text-gray-900 text-3xl font-bold title-font mb-5 self-center">Login Now!</h1>
