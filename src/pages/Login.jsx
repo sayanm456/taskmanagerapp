@@ -1,34 +1,38 @@
 import React, { useState } from 'react'
 import { loginUser } from '../apis/authApi';
+import { useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
 
-  const [userdetails, setUserdetails] = useState({ email: "", password: "", role: "user"})
+  const [userdetails, setUserdetails] = useState({ email: "", password: "", role: "user" })
 
-  const resetForm = ()=>{
-    setCredentials({ name: "", email: "", password: "", cpassword: "", role: "user" });
+  const resetForm = () => {
+    setUserdetails({ email: "", password: "", role: "user" });
   }
 
-  const handleSubmit = async (e) => {
-     e.preventDefault();
-     const { email, password, role } = userdetails;
+  const navigate = useNavigate();
 
-     const response = await loginUser({ email, password, role });
-     console.log(response);
-     if (response.success) {
-      alert("User registered successfully");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { email, password, role } = userdetails;
+
+    const response = await loginUser({ email, password, role });
+    console.log(response);
+    if (response.success) {
+      alert("User loggedin successfully");
       localStorage.setItem('token', response.authtoken);
+      let data = response.data;
       resetForm();
-      navigate('/dashboard');
+      navigate(data.user.role === 'admin' ? "/admindash" : "/userdash");
     }
-    else{
+    else {
       alert("Invalid Credentials");
     }
   }
 
   const handleChange = (e) => {
-    setUserdetails({...userdetails, [e.target.name]: e.target.value });
+    setUserdetails({ ...userdetails, [e.target.name]: e.target.value });
   }
 
   return (

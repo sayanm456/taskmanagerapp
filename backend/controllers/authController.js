@@ -24,10 +24,6 @@ exports.registerUser = async (req, res) => {
         if (user?.email?.password) {
             return res.status(400).json({ success, error: "Sorry, User already registerd" });
         }
-
-        // // Password Encryption
-        // const salt = await bcrypt.genSalt(10);
-        // const secPass = await bcrypt.hash(req.body.password, salt);
         
         // Create a User
         user = await User.create({
@@ -54,6 +50,9 @@ exports.registerUser = async (req, res) => {
 
 //Login a user
 exports.loginUser = async (req, res) => {  
+    // if there are any error or errors, return bad requests and the errors
+    let success = false;
+    const errors = validationResult(req);
     try {
         const { email, password, role } = req.body;
 
@@ -76,7 +75,8 @@ exports.loginUser = async (req, res) => {
         }
 
         const authtoken = jwt.sign(data, process.env.JWT_SECRET_KEY, { expiresIn: '30d' });
-        res.json({ authtoken });
+        success = true;
+        res.json({data, success, authtoken, message: "User loggedin successfully" });
 
     } catch (err) {
         res.status(500).send({ error: err.message, message: 'Internal Server Error' })

@@ -27,7 +27,7 @@ const Signup = () => {
         alert("User registered successfully");
         localStorage.setItem('token', response.authtoken);
         resetForm();
-        navigate('/dashboard');
+        navigate(data.user.role === 'admin' ? "/admindash" : "/userdash");
       }
       else{
         alert("Invalid Credentials");
