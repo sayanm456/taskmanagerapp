@@ -25,7 +25,11 @@ const Signup = () => {
       console.log(response);
       if (response.success) {
         alert("User registered successfully");
-        localStorage.setItem('token', response.authtoken);
+        try {
+          localStorage.setItem('authtoken', response.authtoken);
+        } catch (QuotaExceededError) {
+           console.error(QuotaExceededError);
+        }
         resetForm();
         navigate(data.user.role === 'admin' ? "/admindash" : "/userdash");
       }

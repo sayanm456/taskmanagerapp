@@ -28,15 +28,15 @@ exports.getTasks = async (req, res) => {
     if (due_date) filters.due_date = { $gte: new Date(req.query.due_date) };
 
     // check if user is an admin, fetch all tasks
-    tasks = await Task.find(filters)
+    tasks = await Task.find({...filters})
         .populate("created_by", "name")
         .populate("assigned_user", "name")
         .skip((page - 1) * limit)
         .limit(limit)
         .sort({ created_at: -1, due_date: -1 });
-    let totalTasks = await Task.countDocuments(filters);
+    let totalTasks = await Task.countDocuments({...filters});
 
-    // if user is not admin, fetch only task-owners ot users tasks
+    // if user is not admin, fetch only task-owners or user-specific tasks
     if (req.user.role !== "admin") {
       tasks = await Task.find(
         { "assigned_user._id": req.user._id, ...filters }

@@ -21,7 +21,7 @@ const Login = () => {
     console.log(response);
     if (response.success) {
       alert("User loggedin successfully");
-      localStorage.setItem('token', response.authtoken);
+      localStorage.setItem('authtoken', response.authtoken);
       let data = response.data;
       resetForm();
       navigate(data.user.role === 'admin' ? "/admindash" : "/userdash");
