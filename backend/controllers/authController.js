@@ -10,7 +10,7 @@ exports.registerUser = async (req, res) => {
     let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array()});
+        return res.status(400).json({ errors: errors.array() });
     }
 
     try {
@@ -24,13 +24,13 @@ exports.registerUser = async (req, res) => {
         if (user?.email?.password) {
             return res.status(400).json({ success, error: "Sorry, User already registerd" });
         }
-        
+
         // Create a User
         user = await User.create({
-                name: req.body.name, 
-                email: req.body.email, 
-                password: secPass, 
-                role: req.body.role 
+            name: req.body.name,
+            email: req.body.email,
+            password: secPass,
+            role: req.body.role
         });
         const data = {
             user: {
@@ -41,18 +41,21 @@ exports.registerUser = async (req, res) => {
         const authtoken = jwt.sign(data, process.env.JWT_SECRET_KEY);
 
         success = true;
-        res.status(201).json({data, success, authtoken, message: 'User registered successfully'});
-        
+        res.status(201).json({ data, success, authtoken, message: 'User registered successfully' });
+
     } catch (err) {
         res.status(500).send("Internal Server Error");
     }
 }
 
 //Login a user
-exports.loginUser = async (req, res) => {  
+exports.loginUser = async (req, res) => {
     // if there are any error or errors, return bad requests and the errors
     let success = false;
     const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     try {
         const { email, password, role } = req.body;
 
@@ -63,7 +66,7 @@ exports.loginUser = async (req, res) => {
 
         const passCompare = await bcrypt.compare(password, user.password);
         if (!passCompare) {
-            return res.status(400).json({error: "Invalid or Incorrect password!"})
+            return res.status(400).json({ error: "Invalid or Incorrect password!" })
         }
 
         const data = {
@@ -76,7 +79,7 @@ exports.loginUser = async (req, res) => {
 
         const authtoken = jwt.sign(data, process.env.JWT_SECRET_KEY, { expiresIn: '30d' });
         success = true;
-        res.json({data, success, authtoken, message: "User loggedin successfully" });
+        res.status(201).json({ data, success, authtoken, message: "User loggedin successfully" });
 
     } catch (err) {
         res.status(500).send({ error: err.message, message: 'Internal Server Error' })
@@ -84,21 +87,25 @@ exports.loginUser = async (req, res) => {
 }
 
 // Get loggedin users details
-exports.getUsers = async (req, res)=>{
+exports.getUsers = async (req, res) => {
+
     try {
-        const userId = req.user._id;
-        const user = await User.findById(userId).select("-password");
-        res.send(user);
-        if(!user) {
-            res.status(400).json({message: 'Access denied!'})
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
+        
+        const users = await User.find({ role: 'user' });
 
         // Check if the user is an admin or if the request is made by the user themselves
-        if (userId !== user._id && req.user.role !== 'admin') {
+        if (!req.user && req.user.role !== 'admin') {
             return res.status(403).json({ message: 'Access denied' });
         }
 
+        res.status(201).json({ users, message: "Fetched all users successfully" })
+
     } catch (err) {
         res.status(500).json({ error: err.message, message: 'Internal Server Error' })
+        console.log(err.stack)
     }
 }

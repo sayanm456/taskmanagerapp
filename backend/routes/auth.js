@@ -2,6 +2,7 @@
 const express = require('express');
 const { body } = require('express-validator');
 const authController = require('../controllers/authController');
+const { authUser, authAdmin } = require('../middleware/authUser');
 
 const router = express.Router();
 
@@ -26,8 +27,8 @@ router.post('/login', [
   body('role').isIn(['admin', 'user']).withMessage('role must be required'),
 ], authController.loginUser);
 
-module.exports = router;
-
 // Get logged in user details based on their role: user or admin
 // POST: "api/auth/getuser" 
-router.get('/getuser', authController.getUsers);
+router.get('/getusers', [authUser, authAdmin], authController.getUsers);
+
+module.exports = router;

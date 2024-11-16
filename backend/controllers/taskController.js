@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const Task = require("../models/Task");
+const User = require("../models/User");
 
 // Get all tasks (admin or user can view)
 // Need to be work
@@ -69,11 +70,15 @@ exports.createTask = async (req, res) => {
   try {
     const { title, description, due_date, status, priority, assigned_user } = req.body;
 
+    let newTask = [];
+
     // if there are any errors, return bad request
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    
+
     const task = new Task({
       title,
       description,
@@ -90,13 +95,21 @@ exports.createTask = async (req, res) => {
       },
     });
 
-    const newTask = await task.save();
+    const user = await User.findOne({ _id: assigned_user._id, name: assigned_user.name }).select('_id name');
+    if(!user){
+      return res.status(404).json({ message: "Assigned User details can't matched."});
+    }
 
-    newTask.save();
+    if (task.assigned_user._id.toString() !== user._id.toString() && req.user.role !== "admin") {
+      return res.status(401).json({ message: "Permission denied!" });
+    }
+
+    newTask = await task.save();
 
     res.status(201).json({ message: "Task created successfully", newTask });
   } catch (err) {
     res.status(500).json({ error: err, message: err.message });
+    console.log(err.stack)
   }
 };
 
@@ -113,7 +126,7 @@ exports.updateTask = async (req, res) => {
       newTask.description = description;
     }
     if (due_date) {
-      newTask.due_date = due_date || new Date(due_date);
+      newTask.due_date = due_date || new Date(due_date).toLocaleDateString();
     }
     if (priority) {
       newTask.priority = priority || "Medium";

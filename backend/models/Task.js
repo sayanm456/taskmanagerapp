@@ -28,11 +28,15 @@ const TasksSchema = new Schema({
         _id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
-            required: true
+            refPath: 'User._id',
+            required: true,
+            unique: true
 
         },
         name: {
             type: String,
+            ref: 'User',
+            refPath: 'User.name',
             required: true
         }
     },
@@ -40,14 +44,18 @@ const TasksSchema = new Schema({
         _id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
-            required: true
+            refPath: 'User._id',
+            required: true,
+            unique: true
         },
         name: {
             type: String,
+            ref: 'User',
+            refPath: 'User.name',
             required: true
         }
     },
-}, { timestamps: true }
+}, { timestamps: true, strict: 'throw' }
 );
 
 mongoose.models = {}
