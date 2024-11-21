@@ -1,8 +1,12 @@
 import React from 'react'
+import Header from '../components/Header'
 
 const TaskDash = () => {
   return (
-    <div>TaskDash</div>
+    <>
+      <Header />
+      <div>TaskDash</div>
+    </>
   )
 }
 

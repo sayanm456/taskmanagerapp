@@ -5,6 +5,7 @@ import Signup from "./pages/Signup"
 // import Layout from "./components/Layout"
 import AdminDash from "./pages/AdminDash"
 import TaskDash from "./pages/TaskDash"
+import Home from "./pages/Home"
 
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
             <Routes>
               <Route path="/admindash" element={<h2 className="text-2xl">{<AdminDash/>}</h2>} />
               <Route path="/userdash" element={<h2 className="text-2xl">{<TaskDash/>}</h2>}/>
-              <Route path="/" element={<h2 className="text-2xl">{<TaskDash/>}</h2>} />
+              <Route path="/" element={<h2 className="text-2xl">{<Home/>}</h2>} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
             </Routes>

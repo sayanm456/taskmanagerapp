@@ -43,7 +43,7 @@ const Login = () => {
             <h1 className="text-gray-900 text-3xl font-bold title-font mb-5 self-center">Login Now!</h1>
             <div className="relative mb-4">
               <label htmlFor="email" className="block text-sm font-bold mb-2 text-gray-600">Email ID</label>
-              <input type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={handleChange} />
+              <input type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={handleChange} required/>
             </div>
             <div className="relative mb-4">
               <label htmlFor="password" className="block text-sm font-bold mb-2 text-gray-600">Password</label>
@@ -51,7 +51,8 @@ const Login = () => {
             </div>
             <div className="mb-4">
               <label className="block text-sm font-bold mb-2 text-gray-600">Role</label>
-              <select name='role' className="border border-gray-300 p-2 rounded w-full" onChange={handleChange}>
+              <select name='role' className="border border-gray-300 p-2 rounded w-full" onChange={handleChange} required>
+                <option value="">--Select--</option>
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
               </select>

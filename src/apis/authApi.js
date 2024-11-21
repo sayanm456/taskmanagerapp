@@ -29,11 +29,11 @@ export const registerUser = async (userdetails) => {
     return response.json();
 }
 
-export const getAllTasks = async (token) => {
+export const getallUsers = async () => {
     const response = await fetch(`${API_URL}/api/tasks`, {
         headers: {
             'Content-Type': 'application/json',
-            'auth-token': token
+            'authtoken': localStorage.getItem('authtoken')
         }
     })
     return response.json();

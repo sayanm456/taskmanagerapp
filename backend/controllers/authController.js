@@ -88,24 +88,22 @@ exports.loginUser = async (req, res) => {
 
 // Get loggedin users details
 exports.getUsers = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
 
     try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-        
-        const users = await User.find({ role: 'user' });
-
         // Check if the user is an admin or if the request is made by the user themselves
         if (!req.user && req.user.role !== 'admin') {
-            return res.status(403).json({ message: 'Access denied' });
+            return res.status(403).json({ message: 'Access denied, Admin only' });
         }
 
-        res.status(201).json({ users, message: "Fetched all users successfully" })
+        const users = await User.find({ role: 'user' });
+
+        res.status(201).json({ message: "Fetched all users successfully", users })
 
     } catch (err) {
         res.status(500).json({ error: err.message, message: 'Internal Server Error' })
-        console.log(err.stack)
     }
 }
