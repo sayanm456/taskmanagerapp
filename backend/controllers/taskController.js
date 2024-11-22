@@ -14,7 +14,6 @@ exports.getTasks = async (req, res) => {
 
   try {
 
-
     // Pagination parameters from query
     let page = parseInt(req.query.page) || 1;
     let limit = parseInt(req.query.limit) || 10;
