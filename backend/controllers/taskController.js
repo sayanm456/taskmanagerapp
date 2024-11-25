@@ -3,7 +3,6 @@ const Task = require("../models/Task");
 const User = require("../models/User");
 
 // Get all tasks (admin or user can view)
-// Need to be work
 exports.getTasks = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -209,7 +208,6 @@ exports.getTaskSummary = async (req, res) => {
     if (status) filters.status = status || "To Do";
     if (priority) filters.priority = priority || "Medium";
     if (due_date) filters["due_date"] = { $gte: new Date(req.query.due_date) };
-    // console.log(filters);
 
     // fetch task summary based on filters
 

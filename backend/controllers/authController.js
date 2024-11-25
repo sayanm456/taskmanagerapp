@@ -101,7 +101,9 @@ exports.getUsers = async (req, res) => {
 
         const users = await User.find({ role: 'user' });
 
-        res.status(201).json({ message: "Fetched all users successfully", users })
+        const totalUser = await User.countDocuments({ role: 'user' });
+
+        res.status(201).json({ message: "Fetched all users successfully", totalUser, users })
 
     } catch (err) {
         res.status(500).json({ error: err.message, message: 'Internal Server Error' })
