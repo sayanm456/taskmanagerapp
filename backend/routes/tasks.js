@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { body, query } = require('express-validator');
+const { body } = require('express-validator');
 const taskController = require('../controllers/taskController');
 const { authUser, authAdmin } = require('../middleware/authUser');
 
@@ -33,7 +33,7 @@ router.post(
 // POST: "api/tasks/updatetask/:id"  --its working--
 router.put('/updatetask/:id',
     [
-        authUser,
+        [authUser],
         body('title', 'Enter a valid title').isLength({ min: 3 }).notEmpty().withMessage('Title is required'),
         body('description', 'Description must be atleast 5 charcters').isLength({ min: 5 }).notEmpty().withMessage('Description is required'),
         body('due_date').isISO8601().optional(),
