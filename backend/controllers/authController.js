@@ -99,7 +99,7 @@ exports.getUsers = async (req, res) => {
             return res.status(403).json({ message: 'Access denied, Admin only' });
         }
 
-        const users = await User.find({ role: 'user' });
+        const users = await User.find({ role: 'user' }).select('_id name role');
 
         const totalUser = await User.countDocuments({ role: 'user' });
 

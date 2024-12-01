@@ -45,7 +45,7 @@ const Signup = () => {
 
   return (
     <>
-      <section className="text-gray-600 body-font">
+      <section className="text-gray-600 body-font font-medium">
         <div className="container px-80 pt-10 flex flex-auto flex-wrap items-center">
           <form onSubmit={handleSubmit} className="bg-gray-100 rounded-lg flex flex-col md:ml-auto w-full mt-10 md:mt-0">
             <h1 className="text-gray-900 text-3xl font-bold title-font mb-5 self-center">Register Now!</h1>
@@ -65,20 +65,18 @@ const Signup = () => {
               <label htmlFor="cpassword" className="block text-sm font-bold mb-2 text-gray-600">Confirm Password</label>
               <input type="password" id="cpassword" name="cpassword" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={handleChange} minLength={6} required />
             </div>
-            <div className="mb-4">
+            <div className="relative mb-4">
               <label className="block text-sm font-bold mb-2 text-gray-600">Role</label>
-              <select name='role' className="border border-gray-300 p-2 rounded w-full" onChange={handleChange} required>
+              <select name='role' className=" font-bold border border-gray-300 p-2 rounded w-full" onChange={handleChange} required>
                 <option value="">--Select--</option>
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
               </select>
             </div>
             <button className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Register</button>
-            <div className="flex">
-            <h5 className='text-sm pt-2 text-center drop-shadow-sm'>Already registerd? <a href="/login" className='ml-1'>click here to login!</a></h5>
-            </div>
           </form>
         </div>
+        <h5 className='text-sm pt-2 text-center drop-shadow-sm'>Already registerd? <a href="/login" className='ml-1'>click here to login!</a></h5>
       </section>
     </>
   )

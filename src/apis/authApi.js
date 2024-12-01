@@ -1,9 +1,4 @@
-// const { SERVER_HOST, PORT } = window.env ;
-const SERVER_HOST="http://127.0.0.1"
-const PORT = "8000"
-
-
-const API_URL = `${SERVER_HOST}:${PORT}`
+const API_URL = `${process.env.SERVER_HOST}:${process.env.PORT}`
 
 
 export const loginUser = async (credentials) => {
@@ -30,10 +25,10 @@ export const registerUser = async (userdetails) => {
 }
 
 export const getallUsers = async () => {
-    const response = await fetch(`${API_URL}/api/tasks`, {
+    const response = await fetch(`${API_URL}/api/auth/getusers`, {
         headers: {
             'Content-Type': 'application/json',
-            'authtoken': localStorage.getItem('authtoken')
+            'Authorization': `Bearer ${localStorage.getItem('authtoken')}`
         }
     })
     return response.json();

@@ -51,7 +51,7 @@ const Login = () => {
             </div>
             <div className="mb-4">
               <label className="block text-sm font-bold mb-2 text-gray-600">Role</label>
-              <select name='role' className="border border-gray-300 p-2 rounded w-full" onChange={handleChange} required>
+              <select name='role' className="font-bold border border-gray-300 p-2 rounded w-full" onChange={handleChange} required>
                 <option value="">--Select--</option>
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
