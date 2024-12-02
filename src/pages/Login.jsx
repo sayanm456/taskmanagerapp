@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
-import { loginUser } from '../apis/authApi';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import AuthContext from '../contexts/auth/AuthContext';
 
 
 const Login = () => {
+
+  const { loginUser } = useContext(AuthContext);
 
   const [userdetails, setUserdetails] = useState({ email: "", password: "", role: "user" })
 
@@ -17,17 +20,16 @@ const Login = () => {
     e.preventDefault();
     const { email, password, role } = userdetails;
 
-    const response = await loginUser({ email, password, role });
-    console.log(response);
-    if (response.success) {
-      alert("User loggedin successfully");
-      localStorage.setItem('authtoken', response.authtoken);
-      let data = response.data;
+    const userdetailsjson = await loginUser({ email, password, role });
+    console.log(userdetailsjson);
+    if (userdetailsjson.success) {
+      alert(userdetailsjson.message);
+      localStorage.setItem('authtoken', userdetailsjson.authtoken);
       resetForm();
-      navigate(data.user.role === 'admin' ? "/admindash" : "/userdash");
+      navigate(userdetails.role === 'admin' ? "/admindash" : "/userdash");
     }
     else {
-      alert("Invalid Credentials");
+      alert(userdetailsjson.message);
     }
   }
 
@@ -43,7 +45,7 @@ const Login = () => {
             <h1 className="text-gray-900 text-3xl font-bold title-font mb-5 self-center">Login Now!</h1>
             <div className="relative mb-4">
               <label htmlFor="email" className="block text-sm font-bold mb-2 text-gray-600">Email ID</label>
-              <input type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={handleChange} required/>
+              <input type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={handleChange} required />
             </div>
             <div className="relative mb-4">
               <label htmlFor="password" className="block text-sm font-bold mb-2 text-gray-600">Password</label>

@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
-import { registerUser } from '../apis/authApi'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import AuthContext from '../contexts/auth/AuthContext'
 
 const Signup = () => {
 
+  const {signupUser} = useContext(AuthContext);
+
   const [credentials, setCredentials] = useState({ name: "", email: "", password: "", cpassword: "", role: "user" })
 
-  const resetForm = ()=>{
+  const resetForm = () => {
     setCredentials({ name: "", email: "", password: "", cpassword: "", role: "user" });
   }
 
@@ -21,20 +23,17 @@ const Signup = () => {
       return;
     }
     else {
-      const response = await registerUser({ name, email, password, role });
-      console.log(response);
-      if (response.success) {
-        alert("User registered successfully");
-        try {
-          localStorage.setItem('authtoken', response.authtoken);
-        } catch (QuotaExceededError) {
-           console.error(QuotaExceededError);
-        }
+      const credentialsJson = await signupUser({name, email, password, role});
+      if(credentialsJson.success){
+        alert(credentialsJson.message);
+        localStorage.setItem('authtoken', credentialsJson.authtoken);
         resetForm();
-        navigate(data.user.role === 'admin' ? "/admindash" : "/userdash");
+        navigate(credentials.role === 'admin' ? "/admindash" : "/userdash");
+
       }
       else{
-        alert("Invalid Credentials");
+        alert(credentialsJson.message);
+        resetForm();
       }
     }
   }

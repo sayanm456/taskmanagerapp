@@ -1,7 +1,10 @@
 const API_URL = `${process.env.SERVER_HOST}:${process.env.PORT}`
+// const SERVER_HOST="http://127.0.0.1"
+// const PORT = "8000"
+// const API_URL = `${SERVER_HOST}:${PORT}`
 
 
-export const loginUser = async (credentials) => {
+export const LoginUser = async (credentials) => {
     const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
@@ -13,7 +16,7 @@ export const loginUser = async (credentials) => {
 }
 
 
-export const registerUser = async (userdetails) => {
+export const RegisterUser = async (userdetails) => {
     const response = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
@@ -24,7 +27,7 @@ export const registerUser = async (userdetails) => {
     return response.json();
 }
 
-export const getallUsers = async () => {
+export const GetallUsers = async () => {
     const response = await fetch(`${API_URL}/api/auth/getusers`, {
         headers: {
             'Content-Type': 'application/json',

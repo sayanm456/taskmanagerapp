@@ -44,7 +44,7 @@ exports.registerUser = async (req, res) => {
         res.status(201).json({ data, success, authtoken, message: 'User registered successfully' });
 
     } catch (err) {
-        res.status(500).send("Internal Server Error");
+        res.status(500).send({ error: err, message: err.message })
     }
 }
 
@@ -82,7 +82,7 @@ exports.loginUser = async (req, res) => {
         res.status(201).json({ data, success, authtoken, message: "User loggedin successfully" });
 
     } catch (err) {
-        res.status(500).send({ error: err.message, message: 'Internal Server Error' })
+        res.status(500).send({ error: err, message: err.message })
     }
 }
 
