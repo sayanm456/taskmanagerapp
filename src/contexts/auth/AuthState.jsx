@@ -30,12 +30,9 @@ const AuthState = (props) => {
   // For user logout
   const logOut = () => {
     localStorage.removeItem('authtoken');
-
+    setUserdetails(userdetailsInitial);
 
   }
-
-
-
 
 
   return (

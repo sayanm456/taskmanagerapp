@@ -2,10 +2,18 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const authUser = async (req, res, next) => {
-    const token = req.header('Authorization').split(' ')[1];
-    if(!token) {
-        return res.status(401).json({message: 'authorization denied, please authenticate using valid token!'})
+    // Check if Authorization header exists
+    const authHeader = req.header('Authorization');
+    if (!authHeader) {
+      return res.status(401).json({ message: 'Access Denied: Missing Authorization header.' });
     }
+
+    // Validate token format
+    const token = authHeader.split(' ')[1]; 
+    if (!token) {
+      return res.status(401).json({ message: 'Access Denied: Invalid token format.' });
+    }
+
     try{   
         const data = jwt.verify(token, process.env.JWT_SECRET_KEY);
         req.user = data.user;
