@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AuthContext from '../contexts/auth/AuthContext'
 
@@ -7,6 +7,7 @@ const Signup = () => {
   const {signupUser} = useContext(AuthContext);
 
   const [credentials, setCredentials] = useState({ name: "", email: "", password: "", cpassword: "", role: "user" })
+  const [message, setMessage] = useState({})
 
   const resetForm = () => {
     setCredentials({ name: "", email: "", password: "", cpassword: "", role: "user" });
@@ -26,17 +27,21 @@ const Signup = () => {
       const credentialsJson = await signupUser({name, email, password, role});
       if(credentialsJson.success){
         alert(credentialsJson.message);
+        setMessage(credentialsJson.message);
         localStorage.setItem('authtoken', credentialsJson.authtoken);
-        resetForm();
         navigate(credentials.role === 'admin' ? "/admindash" : "/userdash");
 
       }
       else{
         alert(credentialsJson.message);
-        resetForm();
+        setMessage(message);
       }
     }
   }
+
+  useEffect(() => {
+    resetForm()
+  }, [])
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
@@ -64,6 +69,9 @@ const Signup = () => {
               <label htmlFor="cpassword" className="block text-sm font-bold mb-2 text-gray-600">Confirm Password</label>
               <input type="password" id="cpassword" name="cpassword" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={handleChange} minLength={6} required />
             </div>
+            {/* {credentials.password.length<6 && <h5 className='text-sm pt-2 text-center drop-shadow-sm'>Maximum lenth greater than 6</h5>} */}
+            {credentials.password !== credentials.cpassword && <small className='text-sm pt-2 p-2 text-left text-red-600'>Password's Does not matched</small>}
+
             <div className="relative mb-4">
               <label className="block text-sm font-bold mb-2 text-gray-600">Role</label>
               <select name='role' className=" font-bold border border-gray-300 p-2 rounded w-full" onChange={handleChange} required>

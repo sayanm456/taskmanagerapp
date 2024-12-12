@@ -4,9 +4,6 @@ import { Link, useLocation } from 'react-router-dom'
 const Sidebar = () => {
   let location = useLocation();
 
-  useEffect(() => {
-     console.log(location);
-  }, [location])
   return (
     <div
       className="flex h-screen max-h-[120vh] w-full max-w-[19rem] flex-col rounded-xl bg-white font bg-clip-border p-4 text-gray-700 shadow-xl shadow-black sticky">

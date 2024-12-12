@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import AuthContext from './AuthContext'
-import { LoginUser, RegisterUser } from '../../apis/authApi';
+import { GetallUsers, LoginUser, RegisterUser } from '../../apis/authApi';
 
 const AuthState = (props) => {
 
@@ -10,6 +10,7 @@ const AuthState = (props) => {
   const [credentials, setCredentials] = useState(credentialInitial);
   const [userdetails, setUserdetails] = useState(userdetailsInitial);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [users, setUsers] = useState([]);
 
   const signupUser = async ({ name, email, password, role }) => {
     // logic for register user or sign up process
@@ -24,7 +25,6 @@ const AuthState = (props) => {
     const userdetailsJson = await LoginUser({ email, password, role });
     setUserdetails(userdetailsJson);
     setIsAuthenticated(!isAuthenticated);
-    return userdetailsJson;
   }
 
   // For user logout
@@ -34,9 +34,14 @@ const AuthState = (props) => {
 
   }
 
+  // Get all users for admin
+  const getUsers = async () => {
+    const users = await GetallUsers();
+    setUsers(users);
+  }
 
   return (
-    <AuthContext.Provider value={{ credentials, userdetails, signupUser, loginUser, logOut }}>
+    <AuthContext.Provider value={{ credentials, userdetails, signupUser, loginUser, logOut, getUsers }}>
       {props.children}
     </AuthContext.Provider>
   )
