@@ -9,9 +9,9 @@ import AdminDash from '../pages/AdminDash'
 
 const UIlayout = () => {
   return (
-        <div className="flex align-items">
+        <div className="flex align-items gap-3">
           <Sidebar/>
-          <div className="flex-1 bg-gray-100">
+          <div className="container flex-1 bg-gray-100">
             <Routes>
               <Route path="/admindash" element={<h2 className="text-2xl">{<AdminDash/>}</h2>} />
               <Route path="/userdash" element={<h2 className="text-2xl">{<TaskDash/>}</h2>}/>
