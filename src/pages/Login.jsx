@@ -8,7 +8,7 @@ const Login = () => {
 
   const { loginUser } = useContext(AuthContext);
 
-  const [userdetails, setUserdetails] = useState({ email: "", password: "", role: "user" })
+  const [ userdetails, setUserdetails ] = useState({ email: "", password: "", role: "user" })
 
   const resetForm = () => {
     setUserdetails({ email: "", password: "", role: "user" });
@@ -18,19 +18,18 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { email, password, role } = userdetails;
-
-    const userdetailsjson = await loginUser({ email, password, role });
-    console.log(userdetailsjson);
-    if (userdetailsjson.success) {
-      alert(userdetailsjson.message);
-      localStorage.setItem('authtoken', userdetailsjson.authtoken);
-      resetForm();
-      navigate(userdetails.role === 'admin' ? "/admindash" : "/userdash");
-    }
-    else {
-      alert(userdetailsjson.message);
-    }
+    loginUser(userdetails.email, userdetails.password, userdetails.role);
+    navigate(userdetails.role === 'admin' ? "/admindash" : "/userdash");
+    resetForm();
+    // if (userdetails.success) {
+    //   alert(userdetails.message);
+    //   localStorage.setItem('authtoken', userdetailsjson.authtoken);
+    //   resetForm();
+    //   navigate(userdetails.role === 'admin' ? "/admindash" : "/userdash");
+    // }
+    // else {
+    //   alert(userdetails.message);
+    // }
   }
 
   const handleChange = (e) => {

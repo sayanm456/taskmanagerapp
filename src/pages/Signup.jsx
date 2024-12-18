@@ -4,10 +4,10 @@ import AuthContext from '../contexts/auth/AuthContext'
 
 const Signup = () => {
 
-  const {signupUser} = useContext(AuthContext);
+  const { signupUser } = useContext(AuthContext);
 
   const [credentials, setCredentials] = useState({ name: "", email: "", password: "", cpassword: "", role: "user" })
-  const [message, setMessage] = useState({})
+  const [message, setMessage] = useState('')
 
   const resetForm = () => {
     setCredentials({ name: "", email: "", password: "", cpassword: "", role: "user" });

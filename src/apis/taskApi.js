@@ -39,9 +39,9 @@ export const deleteTask = async (id) => {
     return response.json();
 }
 
-export const getTasks = async () => {
+export const getTasks = async (query) => {
     
-    const response = await fetch(`${API_URL}/api/tasks/getalltasks`, {
+    const response = await fetch(`${API_URL}/api/tasks/getalltasks?${query}`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('authtoken')}`
@@ -50,9 +50,9 @@ export const getTasks = async () => {
     return response.json();
 }
 
-export const getTaskSummary = async () => {
+export const getTaskSummary = async (query) => {
 
-    const response = await fetch(`${API_URL}/api/tasks/tasksummary`, {
+    const response = await fetch(`${API_URL}/api/tasks/tasksummary?${query}`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('authtoken')}`
