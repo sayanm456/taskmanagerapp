@@ -88,6 +88,7 @@ exports.loginUser = async (req, res) => {
 
 // Get loggedin users details
 exports.getUsers = async (req, res) => {
+    let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -99,11 +100,12 @@ exports.getUsers = async (req, res) => {
             return res.status(403).json({ message: 'Access denied, Admin only' });
         }
 
-        const users = await User.find({ role: 'user' }).select('_id name role');
+        const users = await User.find({ role: 'user' }).select('_id name');
 
         const totalUser = await User.countDocuments({ role: 'user' });
+        success = true;
 
-        res.status(201).json({ message: "Fetched all users successfully", totalUser, users })
+        res.status(201).json({success, message: "Fetched all users successfully", totalUser, users })
 
     } catch (err) {
         res.status(500).json({ error: err.message, message: 'Internal Server Error' })

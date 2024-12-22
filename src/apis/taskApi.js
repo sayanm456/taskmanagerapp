@@ -1,7 +1,10 @@
+// const SERVER_HOST = "http://127.0.0.1"
+// const PORT = "3000"
+// const API_URL = `${SERVER_HOST}:${PORT}`
 const API_URL = `${process.env.SERVER_HOST}:${process.env.PORT}`
 
 
-export const createTask = async (title, description, due_date, status, priority, assigned_user) => {
+export const CreateTask = async (title, description, due_date, status, priority, assigned_user) => {
 
     const response = await fetch(`${API_URL}/api/tasks/createtask`, {
         method: 'POST',
@@ -14,7 +17,7 @@ export const createTask = async (title, description, due_date, status, priority,
     return response.json();
 }
 
-export const updateTask = async (id, title, description, due_date, status, priority) => {
+export const UpdateTask = async (id, title, description, due_date, status, priority) => {
     
     const response = await fetch(`${API_URL}/api/tasks/updatetask/${id}`, {
         method: 'PUT',
@@ -27,7 +30,7 @@ export const updateTask = async (id, title, description, due_date, status, prior
     return response.json();
 }
 
-export const deleteTask = async (id) => {
+export const DeleteTask = async (id) => {
     
     const response = await fetch(`${API_URL}/api/tasks/deletetask/${id}`, {
         method: 'DELETE',
@@ -39,7 +42,7 @@ export const deleteTask = async (id) => {
     return response.json();
 }
 
-export const getTasks = async (query) => {
+export const GetTasks = async (query) => {
     
     const response = await fetch(`${API_URL}/api/tasks/getalltasks?${query}`, {
         headers: {
@@ -50,7 +53,7 @@ export const getTasks = async (query) => {
     return response.json();
 }
 
-export const getTaskSummary = async (query) => {
+export const GetTaskSummary = async (query) => {
 
     const response = await fetch(`${API_URL}/api/tasks/tasksummary?${query}`, {
         headers: {

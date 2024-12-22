@@ -19,31 +19,30 @@ const AuthState = (props) => {
     try {
       const credentialsJson = await RegisterUser({ name, email, password, role });
       if (credentialsJson.success) {
-        localStorage.setItem('authtoken', credentialJson.authtoken)
         setCredentials(credentialsJson)
         setIsAuthenticated(!isAuthenticated)
         return credentialsJson;
       }
-      else{
+      else {
         throw new Error(credentialsJson.message)
       }
     } catch (error) {
-      setError(error);
+      setError(error.message);
     }
   }
 
   const loginUser = async ({ email, password, role }) => {
     // logic for login to user access
-    // const userdetailsJson = await LoginUser({ email, password, role });
     try {
       const userDetailsJson = await LoginUser({ email, password, role });
-      if(userDetailsJson.success){
+      if (userDetailsJson.success) {
         setUserDetails(userDetailsJson);
         setIsAuthenticated(!isAuthenticated);
-        return userDetailsJson
+        return userDetailsJson;
       }
-      else{
-        throw new Error(userDetailsJson.message);
+      else {
+        setUserDetails(userDetails);
+        setIsAuthenticated(isAuthenticated);
       }
 
     } catch (error) {
@@ -59,8 +58,22 @@ const AuthState = (props) => {
 
   // Get all users for admin
   const getUsers = async () => {
-    const users = await GetallUsers();
-    setUsers(users);
+    try {
+      const usersJson = await GetallUsers();
+      if(usersJson.success){
+        setUsers(usersJson.users);
+      }
+      else {
+        throw new Error(usersJson.message);
+      }
+    } catch (error) {
+      setError(error.message);
+      setUsers(users);
+
+    }
+    // const usersJson = await GetallUsers();
+    // setUsers(usersJson);
+    // console.log(usersJson);
   }
 
   return (

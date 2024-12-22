@@ -1,4 +1,8 @@
+// const SERVER_HOST = "http://127.0.0.1"
+// const PORT = "3000"
+// const API_URL = `${SERVER_HOST}:${PORT}`
 const API_URL = `${process.env.SERVER_HOST}:${process.env.PORT}`
+ 
 
 
 export const LoginUser = async (credentials) => {

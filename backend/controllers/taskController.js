@@ -68,6 +68,7 @@ exports.createTask = async (req, res) => {
     const { title, description, due_date, status, priority, assigned_user } = req.body;
 
     let newTask = [];
+    let success = false;
 
     // if there are any errors, return bad request
     const errors = validationResult(req);
@@ -101,8 +102,9 @@ exports.createTask = async (req, res) => {
     }
 
     newTask = await task.save();
+    success = true;
 
-    res.status(201).json({ message: "Task created successfully", newTask });
+    res.status(201).json({success, message: "Task created successfully", newTask });
   } catch (err) {
     res.status(500).json({ error: err, message: err.message });
     console.log(err.stack)
