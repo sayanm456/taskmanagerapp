@@ -43,7 +43,6 @@ const AddTask = () => {
     const { name, value } = e.target;
 
     if (name === 'assigned_user') {
-      // Assuming 'value' is the user ID selected from the dropdown
       const selectedUser = users.find(user => user._id === value);
       setNewTask((prevTask) => ({
         ...prevTask,
