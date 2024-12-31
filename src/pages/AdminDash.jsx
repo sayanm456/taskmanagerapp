@@ -1,13 +1,13 @@
 import React, { } from 'react'
 import Header from '../components/Header'
-import Tasks from '../components/Tasks'
+import TaskPage from '../components/TaskPage'
 
 const AdminDash = () => {
 
   return (
     <>
       <Header/>
-      <Tasks/>
+      <TaskPage/>
     </>
   )
 }

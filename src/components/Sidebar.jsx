@@ -1,8 +1,17 @@
-import React, { useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import React, { useContext, useEffect } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import AuthContext from '../contexts/auth/AuthContext';
 
 const Sidebar = () => {
   let location = useLocation();
+  const navigate = useNavigate();
+
+  const { user } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    localStorage.removeItem('authtoken');
+    navigate('/login');
+  }
 
   return (
     <div
@@ -12,7 +21,7 @@ const Sidebar = () => {
           ProWork App
         </h5>
       </div>
-      <hr className="my-2 border-gray-50"/>
+      <hr className="my-2 border-gray-50" />
       <nav className="flex min-w-[240px] flex-col gap-1 p-2 font-sans text-base text-gray-500">
         <div className="relative block w-full">
           <div role="button"
@@ -20,7 +29,7 @@ const Sidebar = () => {
             <button type="button"
               className="flex items-center justify-between w-full p-3 font-sans text-xl antialiased leading-snug text-left transition-colors border-b-0 select-none border-b-gray-100 text-gray-700 hover:text-gray-900">
               <p className="block mr-auto font-sans text-base antialiased font-semi font-semibold leading-relaxed text-black hover:text-white">
-                <Link to={"/"}>Home</Link> 
+                <Link to={"/"}>Home</Link>
               </p>
             </button>
           </div>
@@ -29,7 +38,7 @@ const Sidebar = () => {
           <div role="button" className="flex items-center w-full p-0 leading-tight transition-all rounded-lg outline-none text-start hover:bg-gray-900  hover:text-white hover:outline-none focus:bg-gray-800 focus:bg-opacity-80 focus:text-gray-700 active:bg-gray-50 active:bg-opacity-80 active:text-gray-500">
             <button type="button" className="flex items-center justify-between w-full p-3 font-sans text-xl antialiased font-semibold leading-snug text-left transition-colors border-b-0 select-none border-b-gray-100 text-gray-700 hover:text-gray-900">
               <p className="block mr-auto font-sans text-base antialiased font-semibold leading-relaxed text-black hover:text-white">
-                <Link to={"/admindash"}>Dashboard</Link> 
+                <Link to={"/admindash"}>Dashboard</Link>
               </p>
             </button>
           </div>
@@ -41,15 +50,15 @@ const Sidebar = () => {
         <div role="button" className="flex items-center w-full p-3 leading-tight font-semibold transition-all rounded-lg outline-none text-start text-black hover:bg-gray-900  hover:text-white hover:outline-none focus:bg-gray-800 focus:bg-opacity-80 focus:text-gray-700 active:bg-gray-50 active:bg-opacity-80 active:text-black">
           Profile
         </div>
-        <div role="button">
-          <Link className={`flex items-center w-full p-3 leading-tight font-semibold transition-all rounded-lg outline-none text-start text-black hover:bg-gray-900  hover:text-white hover:outline-none focus:bg-black focus:bg-opacity-80 focus:text-white ${location.pathname==='/signup' ? "active:bg-gray-950 active:bg-opacity-100 active:text-white active:outline-none": ""}`} to={"/signup"}>Register</Link>
+        {!user && !localStorage.getItem('authtoken') ? <> <div role="button">
+          <Link className={`flex items-center w-full p-3 leading-tight font-semibold transition-all rounded-lg outline-none text-start text-black hover:bg-gray-900  hover:text-white hover:outline-none focus:bg-black focus:bg-opacity-80 focus:text-white ${location.pathname === '/signup' ? "active:bg-gray-950 active:bg-opacity-100 active:text-white active:outline-none" : ""}`} to={"/signup"}>Register</Link>
         </div>
-        <div role="button">
-          <Link className={`flex items-center w-full p-3 leading-tight font-semibold transition-all rounded-lg outline-none text-start text-black hover:bg-gray-900  hover:text-white hover:outline-none focus:bg-black focus:bg-opacity-80 focus:text-white ${location.pathname==='/login' ? "active:bg-gray-950 active:bg-opacity-100 active:text-white active:outline-none": ""}`} to={"/login"}>Login</Link>
-        </div>
-        <div role="button" className="flex items-center w-full p-3 leading-tight font-semibold transition-all rounded-lg outline-none text-start text-black hover:bg-gray-900  hover:text-white hover:outline-none focus:bg-gray-800 focus:bg-opacity-80 focus:text-gray-700 active:bg-gray-50 active:bg-opacity-80 active:text-gray-500">
+          <div role="button">
+            <Link className={`flex items-center w-full p-3 leading-tight font-semibold transition-all rounded-lg outline-none text-start text-black hover:bg-gray-900  hover:text-white hover:outline-none focus:bg-black focus:bg-opacity-80 focus:text-white ${location.pathname === '/login' ? "active:bg-gray-950 active:bg-opacity-100 active:text-white active:outline-none" : ""}`} to={"/login"}>Login</Link>
+          </div> 
+          </>: <div role="button" onClick={handleLogout} className="flex items-center w-full p-3 leading-tight font-semibold transition-all rounded-lg outline-none text-start text-black hover:bg-gray-900  hover:text-white hover:outline-none focus:bg-gray-800 focus:bg-opacity-80 focus:text-gray-700 active:bg-gray-50 active:bg-opacity-80 active:text-gray-500">
           Log Out
-        </div>
+        </div>}
       </nav>
     </div>
   )

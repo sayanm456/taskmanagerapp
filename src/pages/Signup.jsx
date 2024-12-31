@@ -31,11 +31,11 @@ const Signup = () => {
         resetForm()
         localStorage.setItem('authtoken', credentialsJson.authtoken)
         navigate(credentials.role === 'admin' ? "/admindash" : "/userdash")
-
       }
       else{
         alert(credentialsJson.message)
         setMessage(credentialsJson.message)
+        navigate("/login")
         resetForm()
       }
     }
@@ -68,7 +68,7 @@ const Signup = () => {
               <input type="password" id="cpassword" name="cpassword" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={onChange} minLength={6} required />
             </div>
             {/* {credentials.password.length<6 && <h5 className='text-sm pt-2 text-center drop-shadow-sm'>Maximum lenth greater than 6</h5>} */}
-            {credentials.password !== credentials.cpassword && <small className='text-sm pt-2 p-2 text-left text-red-600'>Password's Does not matched</small>}
+            {credentials.password !== credentials.cpassword && <strong className='text-sm pt-2 p-2 text-left text-red-700'><h6>Password's Does not matched</h6></strong>}
 
             <div className="relative mb-4">
               <label className="block text-sm font-bold mb-2 text-gray-600">Role</label>
@@ -78,7 +78,7 @@ const Signup = () => {
                 <option value="admin">Admin</option>
               </select>
             </div>
-            <button className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Register</button>
+            <button className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-sm">Register</button>
           </form>
         </div>
         <h5 className='text-sm pt-2 text-center drop-shadow-sm'>Already registerd? <a href="/login" className='ml-1'>click here to login!</a></h5>

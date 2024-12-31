@@ -60,7 +60,7 @@ const Login = () => {
                 <option value="admin">Admin</option>
               </select>
             </div>
-            <button className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-500 rounded text-lg">Login</button>
+            <button className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-500 rounded text-sm">Login</button>
           </form>
         </div>
         <h5 className='text-sm mt-4 text-center drop-shadow-sm '>Are you not registerd?<a href="/signup" className='ml-1'>click here to signup!</a></h5>

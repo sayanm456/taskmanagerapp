@@ -7,9 +7,10 @@ const AuthState = (props) => {
   // For user registration or signup
   const credentialInitial = {};
   const userDetailsInitial = {};
+  const [user, setUser] = useState(null);
   const [credentials, setCredentials] = useState(credentialInitial);
   const [userDetails, setUserDetails] = useState(userDetailsInitial);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null)
 
@@ -19,12 +20,13 @@ const AuthState = (props) => {
     try {
       const credentialsJson = await RegisterUser({ name, email, password, role });
       if (credentialsJson.success) {
-        setCredentials(credentialsJson)
-        setIsAuthenticated(!isAuthenticated)
+        setCredentials(credentialsJson);
+        setUser(credentialsJson.user);
+        // setIsAuthenticated(true);
         return credentialsJson;
       }
       else {
-        throw new Error(credentialsJson.message)
+        throw new Error(credentialsJson.message);
       }
     } catch (error) {
       setError(error.message);
@@ -37,23 +39,18 @@ const AuthState = (props) => {
       const userDetailsJson = await LoginUser({ email, password, role });
       if (userDetailsJson.success) {
         setUserDetails(userDetailsJson);
-        setIsAuthenticated(!isAuthenticated);
+        setUser(userDetailsJson.user);
+        // setIsAuthenticated(userDetailsJson.success);
         return userDetailsJson;
       }
       else {
         setUserDetails(userDetails);
-        setIsAuthenticated(isAuthenticated);
+        // setIsAuthenticated(!isAuthenticated);
       }
 
     } catch (error) {
       setError(error.message)
     }
-  }
-
-  // For user logout
-  const logOut = () => {
-    localStorage.removeItem('authtoken');
-    setUserDetails(userDetailsInitial);
   }
 
   // Get all users for admin
@@ -69,15 +66,11 @@ const AuthState = (props) => {
     } catch (error) {
       setError(error.message);
       setUsers(users);
-
     }
-    // const usersJson = await GetallUsers();
-    // setUsers(usersJson);
-    // console.log(usersJson);
   }
 
   return (
-    <AuthContext.Provider value={{ credentials, userDetails, users, error, signupUser, loginUser, logOut, getUsers }}>
+    <AuthContext.Provider value={{ user, credentials, userDetails, users, error, signupUser, loginUser, getUsers }}>
       {props.children}
     </AuthContext.Provider>
   )
