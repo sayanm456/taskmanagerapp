@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
-import AuthContext from '../contexts/auth/AuthContext';
+import AuthContext from '../../contexts/auth/AuthContext';
 
 
 const Login = () => {
