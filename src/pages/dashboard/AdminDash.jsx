@@ -1,6 +1,6 @@
 import React, { } from 'react'
-import Header from '../components/Header'
-import TaskPage from '../components/TaskPage'
+import Header from '../../components/ui/Header'
+import TaskPage from '../../components/task/TaskPage'
 
 const AdminDash = () => {
 

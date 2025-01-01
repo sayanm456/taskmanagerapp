@@ -1,5 +1,6 @@
 // import React, { useContext, useEffect } from 'react'
-import AddTask from './AddTask'
+
+import AddTask from "./AddTask"
 
 const TaskPage = () => {
   return (

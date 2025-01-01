@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import AuthContext from '../contexts/auth/AuthContext';
+import AuthContext from '../../contexts/auth/AuthContext';
 
 const Sidebar = () => {
   let location = useLocation();

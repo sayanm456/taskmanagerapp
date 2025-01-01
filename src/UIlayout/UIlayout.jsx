@@ -1,11 +1,12 @@
 import React from 'react'
 import { Routes, Route } from "react-router-dom"
-import Home from '../pages/Home'
-import Sidebar from '../components/Sidebar'
-import Login from '../pages/Login'
-import Signup from '../pages/Signup'
-import TaskDash from '../pages/TaskDash'
-import AdminDash from '../pages/AdminDash'
+import Home from '../pages/uiPage/Home'
+import Sidebar from '../components/ui/Sidebar'
+import AdminDash from '../pages/dashboard/AdminDash'
+import TaskDash from '../pages/dashboard/TaskDash'
+import Login from '../pages/login/Login'
+import Signup from '../pages/signup/Signup'
+
 
 const UIlayout = () => {
   return (
