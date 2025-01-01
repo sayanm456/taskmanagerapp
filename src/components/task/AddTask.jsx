@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import TaskContext from "../contexts/tasks/TaskContext";
-import AuthContext from "../contexts/auth/AuthContext";
+import TaskContext from "../../contexts/tasks/TaskContext";
+import AuthContext from "../../contexts/auth/AuthContext";
 
 const AddTask = () => {
   const ref = useRef(null);
