@@ -6,7 +6,8 @@ const Sidebar = () => {
   let location = useLocation();
   const navigate = useNavigate();
 
-  const { user } = useContext(AuthContext);
+  const { user, role } = useContext(AuthContext);
+
 
   const handleLogout = () => {
     localStorage.removeItem('authtoken');
@@ -36,9 +37,11 @@ const Sidebar = () => {
         </div>
         <div className="relative block w-full">
           <div role="button" className="flex items-center w-full p-0 leading-tight transition-all rounded-lg outline-none text-start hover:bg-gray-900  hover:text-white hover:outline-none focus:bg-gray-800 focus:bg-opacity-80 focus:text-gray-700 active:bg-gray-50 active:bg-opacity-80 active:text-gray-500">
-            <button type="button" className="flex items-center justify-between w-full p-3 font-sans text-xl antialiased font-semibold leading-snug text-left transition-colors border-b-0 select-none border-b-gray-100 text-gray-700 hover:text-gray-900">
+            <button disabled={user} type="button" className="flex items-center justify-between w-full p-3 font-sans text-xl antialiased font-semibold leading-snug text-left transition-colors border-b-0 select-none border-b-gray-100 text-gray-700 hover:text-gray-900">
               <p className="block mr-auto font-sans text-base antialiased font-semibold leading-relaxed text-black hover:text-white">
-                <Link to={"/admindash"}>Dashboard</Link>
+                {/* <Link to={ role === "admin" ? "/admindash": "/userdash"}>Dashboard</Link> */}
+                {role === "admin" && <Link to="/admindash">Dashboard</Link>}
+                {role === "user" && <Link to="/userdash">Dashboard</Link>}
               </p>
             </button>
           </div>

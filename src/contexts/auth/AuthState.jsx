@@ -8,6 +8,7 @@ const AuthState = (props) => {
   const credentialInitial = {};
   const userDetailsInitial = {};
   const [user, setUser] = useState(null);
+  const [role, setRole] = useState('user')
   const [credentials, setCredentials] = useState(credentialInitial);
   const [userDetails, setUserDetails] = useState(userDetailsInitial);
   // const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -22,6 +23,7 @@ const AuthState = (props) => {
       if (credentialsJson.success) {
         setCredentials(credentialsJson);
         setUser(credentialsJson.user);
+        setRole(credentialsJson.role);
         // setIsAuthenticated(true);
         return credentialsJson;
       }
@@ -40,6 +42,7 @@ const AuthState = (props) => {
       if (userDetailsJson.success) {
         setUserDetails(userDetailsJson);
         setUser(userDetailsJson.user);
+        setRole(userDetailsJson.role);
         // setIsAuthenticated(userDetailsJson.success);
         return userDetailsJson;
       }
@@ -70,7 +73,7 @@ const AuthState = (props) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, credentials, userDetails, users, error, signupUser, loginUser, getUsers }}>
+    <AuthContext.Provider value={{ user, role, credentials, userDetails, users, error, signupUser, loginUser, getUsers }}>
       {props.children}
     </AuthContext.Provider>
   )
