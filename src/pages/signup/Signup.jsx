@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AuthContext from '../../contexts/auth/AuthContext'
 
@@ -34,7 +34,7 @@ const Signup = () => {
       }
       else{
         alert(credentialsJson.message)
-        setMessage(credentialsJson.message)
+        setMessage(message)
         navigate("/login")
         resetForm()
       }
@@ -68,7 +68,7 @@ const Signup = () => {
               <input type="password" id="cpassword" name="cpassword" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={onChange} minLength={6} required />
             </div>
             {/* {credentials.password.length<6 && <h5 className='text-sm pt-2 text-center drop-shadow-sm'>Maximum lenth greater than 6</h5>} */}
-            {credentials.password !== credentials.cpassword && <strong className='text-sm pt-2 p-2 text-left text-red-700'><h6>Password's Does not matched</h6></strong>}
+            {credentials.password !== credentials.cpassword && <strong className='text-sm pt-2 p-2 text-left text-red-700'><h6>Password Does not matched</h6></strong>}
 
             <div className="relative mb-4">
               <label className="block text-sm font-bold mb-2 text-gray-600">Role</label>

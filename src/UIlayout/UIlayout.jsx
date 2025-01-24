@@ -1,4 +1,3 @@
-import React from 'react'
 import { Routes, Route } from "react-router-dom"
 import Home from '../pages/uiPage/Home'
 import Sidebar from '../components/ui/Sidebar'
@@ -10,7 +9,7 @@ import Signup from '../pages/signup/Signup'
 
 const UIlayout = () => {
   return (
-        <div className="flex align-items gap-3">
+        <div className="flex align-items gap-x-2">
           <Sidebar/>
           <div className="container flex-1 bg-gray-100">
             <Routes>

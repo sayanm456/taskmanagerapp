@@ -1,3 +1,4 @@
+import React from 'react'
 import { BrowserRouter as Router } from "react-router-dom"
 // import Layout from "./components/Layout"
 import UIlayout from "./UIlayout/UIlayout"
@@ -9,13 +10,15 @@ function App() {
 
   return (
     <>
-      <TaskState>
-        <AuthState>
-          <Router>
-            <UIlayout />
-          </Router>
-        </AuthState>
-      </TaskState>
+      <React.StrictMode>
+        <TaskState>
+          <AuthState>
+            <Router>
+              <UIlayout />
+            </Router>
+          </AuthState>
+        </TaskState>
+      </React.StrictMode>
     </>
   )
 }
