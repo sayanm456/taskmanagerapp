@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import AuthContext from '../../contexts/auth/AuthContext';
 
@@ -6,7 +6,9 @@ const Sidebar = () => {
   let location = useLocation();
   const navigate = useNavigate();
 
-  const { user, role } = useContext(AuthContext);
+  const { isAuthenticated, credentials, role } = useContext(AuthContext);
+
+  console.log(JSON.stringify(credentials));
 
 
   const handleLogout = () => {
@@ -35,17 +37,27 @@ const Sidebar = () => {
             </button>
           </div>
         </div>
-        <div className="relative block w-full">
+        {role === "admin" ? <div className="relative block w-full">
           <div role="button" className="flex items-center w-full p-0 leading-tight transition-all rounded-lg outline-none text-start hover:bg-gray-900  hover:text-white hover:outline-none focus:bg-gray-800 focus:bg-opacity-80 focus:text-gray-700 active:bg-gray-50 active:bg-opacity-80 active:text-gray-500">
-            <button disabled={user} type="button" className="flex items-center justify-between w-full p-3 font-sans text-xl antialiased font-semibold leading-snug text-left transition-colors border-b-0 select-none border-b-gray-100 text-gray-700 hover:text-gray-900">
+            <button disabled={isAuthenticated} type="button" className="flex items-center justify-between w-full p-3 font-sans text-xl antialiased font-semibold leading-snug text-left transition-colors border-b-0 select-none border-b-gray-100 text-gray-700 hover:text-gray-900">
               <p className="block mr-auto font-sans text-base antialiased font-semibold leading-relaxed text-black hover:text-white">
-                {/* <Link to={ role === "admin" ? "/admindash": "/userdash"}>Dashboard</Link> */}
-                {role === "admin" && <Link to="/admindash">Dashboard</Link>}
-                {role === "user" && <Link to="/userdash">Dashboard</Link>}
+                <Link to={"/admindash"}>Dashboard</Link>
+                {/* {role === "admin" && <Link to="/admindash">Dashboard</Link>}
+                {role === "user" && <Link to="/userdash">Dashboard</Link>} */}
               </p>
             </button>
           </div>
-        </div>
+        </div> : <div className="relative block w-full">
+          <div role="button" className="flex items-center w-full p-0 leading-tight transition-all rounded-lg outline-none text-start hover:bg-gray-900  hover:text-white hover:outline-none focus:bg-gray-800 focus:bg-opacity-80 focus:text-gray-700 active:bg-gray-50 active:bg-opacity-80 active:text-gray-500">
+            <button disabled={isAuthenticated} type="button" className="flex items-center justify-between w-full p-3 font-sans text-xl antialiased font-semibold leading-snug text-left transition-colors border-b-0 select-none border-b-gray-100 text-gray-700 hover:text-gray-900">
+              <p className="block mr-auto font-sans text-base antialiased font-semibold leading-relaxed text-black hover:text-white">
+                <Link to={"/userdash"}>Dashboard</Link>
+                {/* {role === "admin" && <Link to="/admindash">Dashboard</Link>}
+                {role === "user" && <Link to="/userdash">Dashboard</Link>} */}
+              </p>
+            </button>
+          </div>
+        </div>}
         <div role="button"
           className="flex items-center w-full p-3 leading-tight font-semibold transition-all rounded-lg outline-none text-start text-black hover:bg-gray-900  hover:text-white hover:outline-none focus:bg-gray-800 focus:bg-opacity-80 focus:text-gray-700 active:bg-gray-50 active:bg-opacity-80 active:text-black">
           Inbox
@@ -53,7 +65,7 @@ const Sidebar = () => {
         <div role="button" className="flex items-center w-full p-3 leading-tight font-semibold transition-all rounded-lg outline-none text-start text-black hover:bg-gray-900  hover:text-white hover:outline-none focus:bg-gray-800 focus:bg-opacity-80 focus:text-gray-700 active:bg-gray-50 active:bg-opacity-80 active:text-black">
           Profile
         </div>
-        {!user && !localStorage.getItem('authtoken') ? <> <div role="button">
+        {!isAuthenticated && !localStorage.getItem('authtoken') ? <> <div role="button">
           <Link className={`flex items-center w-full p-3 leading-tight font-semibold transition-all rounded-lg outline-none text-start text-black hover:bg-gray-900  hover:text-white hover:outline-none focus:bg-black focus:bg-opacity-80 focus:text-white ${location.pathname === '/signup' ? "active:bg-gray-950 active:bg-opacity-100 active:text-white active:outline-none" : ""}`} to={"/signup"}>Register</Link>
         </div>
           <div role="button">

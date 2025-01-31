@@ -7,14 +7,15 @@ const TaskDash = () => {
 
   const navigate = useNavigate();
 
-  const { user, role } = useContext(AuthContext);
+  const { isAuthenticated, role } = useContext(AuthContext);
+  console.log(role);
 
 
   useEffect(() => {
-    if ((!user || role!=="user") && !localStorage.getItem('authtoken')) {
+    if ((!isAuthenticated && role!=="user") && !localStorage.getItem('authtoken')) {
       navigate('/login')
     }
-  }, [user, role, navigate])
+  }, [isAuthenticated, role, navigate])
   return (
     <>
       <Header />
