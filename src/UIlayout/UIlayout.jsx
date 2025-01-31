@@ -5,6 +5,7 @@ import AdminDash from '../pages/dashboard/AdminDash'
 import TaskDash from '../pages/dashboard/TaskDash'
 import Login from '../pages/login/Login'
 import Signup from '../pages/signup/Signup'
+import RoleBasedRoute from "../components/route/RoleBasedRoute"
 
 
 const UIlayout = () => {
@@ -13,8 +14,14 @@ const UIlayout = () => {
           <Sidebar/>
           <div className="container flex-1 bg-gray-100">
             <Routes>
-              <Route path="/admindash" element={<h2 className="text-2xl">{<AdminDash/>}</h2>} />
-              <Route path="/userdash" element={<h2 className="text-2xl">{<TaskDash/>}</h2>}/>
+              <Route path="/admindash" element={<h2 className="text-2xl">{
+                <RoleBasedRoute allowedRoles={["admin"]}>
+                   <AdminDash/> 
+                </RoleBasedRoute>}</h2>} />
+              <Route path="/userdash" element={<h2 className="text-2xl">{
+                <RoleBasedRoute allowedRoles={["user"]}>
+                   <TaskDash/>
+                </RoleBasedRoute>}</h2>}/>
               <Route path="/" element={<h2 className="text-2xl">{<Home/>}</h2>} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
